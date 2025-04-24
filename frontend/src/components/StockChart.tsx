@@ -1,15 +1,13 @@
-"use client";
+import React, { useEffect, useState } from "react";
 
-import { useEffect, useState } from "react";
-
-export interface Data {
+interface Data {
     p: number;
     s: string;
     t: number;
     v: number;
 }
 
-export default function Home() {
+export default function StockChart() {
     const [data, setData] = useState<Data[]>([]);
 
     useEffect(() => {
@@ -39,11 +37,12 @@ export default function Home() {
 
     return (
         <div>
+            {data.length > 0 && <h1>Stock: {data[0].s}</h1>}
             {data.map((el, idx) => (
                 <div key={idx}>
                     <p>Symbol: {el.s}</p>
                     <p>Price: {el.p}</p>
-                    <p>Time: {Math.floor(el.t/1000/60)}</p>
+                    <p>Time: {Math.floor(el.t / 1000 / 60)}</p>
                     <p>Volume: {el.v}</p>
                 </div>
             ))}
