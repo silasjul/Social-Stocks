@@ -1,0 +1,31 @@
+docker compose --env-file .env up --build
+// ved fejl der er rettet fjern evt container:
+docker compose down -v  
+docker rmi social-stocks-scraper   
+// og kør igen
+
+
+Nogle updates:
+DB-forsinkelsen blev håndteret korrekt via retry-loopet (DB not ready yet).
+
+Scraperen genkendte sidste kendte truth og stoppede som forventet.
+
+101 truths blev forsøgt indsat, men kun 97 var nye, hvilket stemmer overens med:
+
+Du har ON DUPLICATE KEY UPDATE i INSERT, som ignorerer eksisterende entries.
+
+Dermed har du ingen dubletter, og det er helt efter bogen.
+
+Scripts:
+To check database (
+    1.last 5 truths. 
+    2.amount of truths in databse - since start-time[25 Appril 06:13 truth 30769], 
+    3.and this very registration in the table "scraper_state" ):
+
+python check_db.py
+
+To delete dublettes (should not be necessary):
+
+python cleanup_truths.py
+
+! careful with delete ! (deletes the database)
