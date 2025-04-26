@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Python kompilerede filer
+# Mapper hvor Python gemmer bytecode
+__pycache__/    
+# Filer med kompileret Python bytecode
+*.pyc           

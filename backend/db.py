@@ -1,6 +1,7 @@
 import mysql.connector
 import os
 import time
+from models import Truth
 
 def get_connection():
     for _ in range(10):
@@ -16,13 +17,14 @@ def get_connection():
             print(f"[!] DB not ready yet: {err}")
             time.sleep(3)
     raise Exception("Could not connect to DB after 10 tries")
-def insert_truth(url, text, timestamp):
+
+def insert_truth(truth: Truth):
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
         INSERT IGNORE INTO truths (url, content, timestamp)
         VALUES (%s, %s, %s)
-    """, (url, text, timestamp))
+    """, (truth.href, truth.content, truth.timestamp))
     conn.commit()
     cursor.close()
     conn.close()
@@ -35,6 +37,22 @@ def get_last_scraped_href_and_time():
     cursor.close()
     conn.close()
     return row if row else (None, None)
+
+def insert_truths(truths: list[Truth]):
+    if not truths:
+        return
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    data = [(t.href, t.content, t.timestamp) for t in truths]
+    cursor.executemany("""
+                       INSERT IGNORE INTO truths (url, content, timestamp)
+                       VALUES (%s, %s, %s)
+                       """, data)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
 
 def update_last_scraped_href_and_time(href, timestamp):
     conn = get_connection()
@@ -50,3 +68,13 @@ def update_last_scraped_href_and_time(href, timestamp):
     conn.commit()
     cursor.close()
     conn.close()
+
+def get_truths_count():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM truths")
+    count = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
+    return count
+

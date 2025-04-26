@@ -19,17 +19,17 @@ conn = mysql.connector.connect(
 
 cursor = conn.cursor()
 
-print("---- Latest 5 truths ----")
-cursor.execute("SELECT url, timestamp FROM truths ORDER BY timestamp DESC LIMIT 5")
+print("\n ------  Latest 5 truths  ------\n")
+cursor.execute("SELECT timestamp, content FROM truths ORDER BY timestamp DESC LIMIT 5")
 for row in cursor.fetchall():
-    print(row)
+    print(" Time: ", row, "\n")
 
-print("---- Amount of truths ----")
+print("\n ---- Amount of truths in database ----\n")
 cursor.execute("SELECT COUNT(*) FROM truths")
 count = cursor.fetchone()[0]
-print(count)
+print("\t\t",count)
 
-print("\n---- Scraper State ----")
+print("\n ------      Scraper State     ------\n")
 cursor.execute("SELECT * FROM scraper_state")
 for row in cursor.fetchall():
     print(row)

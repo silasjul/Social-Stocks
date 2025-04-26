@@ -1,8 +1,16 @@
+// To build new:
 docker compose --env-file .env up --build
 // ved fejl der er rettet fjern evt container:
 docker compose down -v  
 docker rmi social-stocks-scraper   
 // og kør igen
+// efter scraperen har kørt lukker den ned, hvis du vil scrape igen:
+docker compose run --rm scraper
+// eller hvis der skal scrapes 10 sider:
+docker compose run --rm -e MAX_PAGES=10 scraper
+// Streaming med 30 sekunders interval (default 60):
+docker compose run --rm scraper python run.py --stream --interval 30
+
 
 
 Nogle updates:
