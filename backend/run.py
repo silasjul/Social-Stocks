@@ -100,7 +100,11 @@ def handle_one_shot():
     return truths
 
 def handle_streaming(interval):
-    run_stream(interval)
+    try:
+        run_stream(interval)
+    except KeyboardInterrupt:
+        print("\n[i] Exiting steam-mode... Goodbye!")
+
 
 
 
