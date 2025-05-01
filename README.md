@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+<pre>
+████████╗██████╗  █████╗ ██████╗ ███████╗███████╗ ██████╗  ██████╗██╗ █████╗ ██╗     
+╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝██╔═══██╗██╔════╝██║██╔══██╗██║     
+   ██║   ██████╔╝███████║██║  ██║█████╗  ███████╗██║   ██║██║     ██║███████║██║     
+   ██║   ██╔══██╗██╔══██║██║  ██║██╔══╝  ╚════██║██║   ██║██║     ██║██╔══██║██║     
+   ██║   ██║  ██║██║  ██║██████╔╝███████╗███████║╚██████╔╝╚██████╗██║██║  ██║███████╗
+   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝ ╚═════╝  ╚═════╝╚═╝╚═╝  ╚═╝╚══════╝
+-------------------------------------------------------------------------------------
+An adventure rpg game for programmers to learn and practice fun coding problems!
+</pre>
 
-## Getting Started
+[![Next.js](https://img.shields.io/badge/Next-black?style=flat&logo=next.js&logoColor=white)](https://nextjs.org/) [![Python](https://img.shields.io/badge/Python-3.13%2B-blue?style=flat&logo=python&logoColor=white)](https://www.python.org/) [![Docker](https://img.shields.io/badge/Docker-blue?style=flat&logo=docker&logoColor=white)](https://www.docker.com/) [![MySQL](https://img.shields.io/badge/MySQL-005C84?style=flat&logo=mysql&logoColor=white)](https://www.mysql.com/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-First, run the development server:
+</div>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+TradeSocial is a web application designed for traders, providing insights into potential market movements by analyzing tweets from influential figures alongside traditional stock data.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Description
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The core idea behind TradeSocial is to leverage social media sentiment, to gauge potential impacts on the stock market. We scrape tweets from selected influential individuals, analyze them to determine their potential market influence, and present this information alongside relevant stock data to help traders make more informed decisions.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Tech Stack
 
-## Learn More
+This project utilizes a combination of modern web technologies:
 
-To learn more about Next.js, take a look at the following resources:
+-   **Frontend:** [Next.js](https://nextjs.org/) (React Framework)
+-   **Backend/Scraping/Analysis:** [Python](https://www.python.org/) (using FastAPI, BeautifulSoup for scraping and gemini for tweet analysing)
+-   **Database:** [MySQL](https://www.mysql.com/)
+-   **Containerization:** [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+-   **Stock Data Visualization:** View historical and real-time stock data.
+-   **Influencer Tweet Feed:** Displays tweets scraped from a curated list of influential people in the finance space.
+-   **Tweet Influence Score:** Each relevant tweet is analyzed and assigned a score indicating its potential probability to influence market sentiment or stock prices.
+-   **User Accounts:** You can sign-up to save you selected people and stocks for easy use in the future.
