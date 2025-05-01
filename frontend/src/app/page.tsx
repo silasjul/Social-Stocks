@@ -1,13 +1,11 @@
-"use client";
-
+import QuoteChart from "@/components/quote-chart";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 
-export default function Page() {
-
+export default async function Page() {
     return (
         <>
             <AppSidebar activepage="Dashboard">
-                
+                <QuoteChart />
             </AppSidebar>
         </>
     );

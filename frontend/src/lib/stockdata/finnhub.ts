@@ -1,6 +1,4 @@
 import axios from "axios";
-import dotenv from "dotenv";
-dotenv.config();
 
 /*
 Finnhub's free plan allows up to 60 api calls / minute
@@ -9,6 +7,7 @@ use api to get symbol, company information and realtime stock data
 */
 
 const api_key = process.env.FINNHUB_API_KEY;
+console.log(api_key);
 if (!api_key) {
     throw new Error(
         "FINNHUB_API_KEY is not defined in the environment variables."
@@ -110,7 +109,7 @@ async function getCompanyProfile(
     return result;
 }
 
-interface Quote {
+export interface Quote {
     c: number; // Current price
     d: number; // Change in price since last close
     dp: number; // d in percentage
@@ -141,3 +140,6 @@ export {
     getQuote,
     searchSymbols,
 };
+
+const data = await getQuote("AAPL");
+console.log(data);

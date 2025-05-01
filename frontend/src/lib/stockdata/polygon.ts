@@ -78,3 +78,6 @@ async function getHourly(symbol: string) {
 async function getMinutes(symbol: string, minutes: number) {
     return await getOHLC(symbol, minutes, "minute");
 }
+
+const data = await getMinutes("AAPL", 5)
+console.log(data)

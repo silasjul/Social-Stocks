@@ -24,7 +24,6 @@ def parse_args():
     return parser.parse_args()
 
 def run_once(streaming=False, max_pages=None):
-
     if streaming:
         max_pages = 0
     elif max_pages is None:
@@ -54,8 +53,6 @@ def run_once(streaming=False, max_pages=None):
         next_button_xpath=next_button_xpath,
         max_pages=max_pages
     )
-
-    
     
     truths, newest_href, newest_time = parse_truths(pages, last_href, last_time)
 
@@ -111,9 +108,6 @@ def handle_streaming(interval):
         run_stream(interval)
     except KeyboardInterrupt:
         print("\n[i] Exiting steam-mode... Goodbye!")
-
-
-
 
 def main():
     args = parse_args()
