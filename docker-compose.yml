@@ -1,4 +1,14 @@
 services:
+  api:
+    build: ./backend
+    container_name: social-api
+    depends_on:
+      - db
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    command: ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
   db:
     image: mysql:8
     container_name: social-mysql

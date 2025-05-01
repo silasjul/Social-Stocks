@@ -20,9 +20,9 @@ conn = mysql.connector.connect(
 cursor = conn.cursor()
 
 print("\n ------  Latest 5 truths  ------\n")
-cursor.execute("SELECT timestamp, content FROM truths ORDER BY timestamp DESC LIMIT 5")
+cursor.execute("SELECT timestamp, url, content FROM truths ORDER BY timestamp DESC LIMIT 5")
 for row in cursor.fetchall():
-    print(" Time: ", row, "\n")
+    print("\nTime:    ", row[0], "\nUrl:     ", row[1], "\nContent: ", row[2])
 
 print("\n ---- Amount of truths in database ----\n")
 cursor.execute("SELECT COUNT(*) FROM truths")

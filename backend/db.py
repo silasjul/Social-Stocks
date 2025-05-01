@@ -41,6 +41,10 @@ def get_last_scraped_href_and_time():
 def insert_truths(truths: list[Truth]):
     if not truths:
         return
+    
+    # Reverse to ensure newest truths is last inserted
+    truths.reverse()
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -77,4 +81,13 @@ def get_truths_count():
     cursor.close()
     conn.close()
     return count
+
+def get_all_truths():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT url,content,timestamp FROM truths ORDER BY timestamp DESC")
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return [Truth(href=row[0], content=row[1], timestamp=row[2]) for row in rows]
 

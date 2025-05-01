@@ -9,6 +9,10 @@ import json
 from datetime import datetime
 
 load_dotenv()
+with open("config.json", "r") as config_file:
+    config = json.load(config_file)
+
+max_pages = config["max_pages"]
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Run the Social Stocks scraper.")
@@ -123,49 +127,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# Old 
-# def main():
-#     # Inform how many pages MAX_PAGES are set to
-#     print(f"[i] Scraper configured to use max_pages={max_pages}")
-
-#     # Define parameters for scraping
-#     base_url = "https://trumpstruth.org/"
-#     per_page_xpath = "//select[@name='per_page']"
-#     per_page_value = "50"
-#     next_button_xpath = "//a[@class='button button--xsmall']"
-
-#     # Fetch url and time from last scraped data
-#     last_href, last_time = get_last_scraped_href_and_time()
-
-#     # Scrape new pages
-#     pages = get_page_sources(
-#         base_url=base_url,
-#         per_page_xpath=per_page_xpath,
-#         per_page_value=per_page_value,
-#         next_button_xpath=next_button_xpath,
-#         max_pages=max_pages
-#     )
-
-#     # Parse pages
-#     truths, newest_href, newest_time = parse_truths(pages, last_href, last_time)
-
-#     # Before insertion
-#     before_count = get_truths_count()
-
-
-#     # Save in database
-#     if truths:
-#         insert_truths(truths)
-#         update_last_scraped_href_and_time(newest_href, newest_time)
-#         print(f"[i] Inserted {len(truths)} new truths.")
-#     else:
-#         print("[i] No new truths to insert.")
-    
-#     # After insertion
-#     after_count = get_truths_count()
-
-#     print(f"Tried to insert {len(truths)} truths.")
-#     print(f"Actually inserted: {after_count - before_count}")
-
