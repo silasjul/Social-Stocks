@@ -15,7 +15,7 @@ config_path = os.path.join(base_dir, "config.json")
 with open(config_path, "r") as config_file:
     config = json.load(config_file)
 
-max_pages = config.get("max_pages", 8)
+max_pages = config.get("max_pages", 10)
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Run the Social Stocks scraper.")
@@ -102,7 +102,6 @@ def serialize_truth(truth):
     }
 
 def handle_one_shot():
-    max_pages = int(os.getenv("MAX_PAGES", 10))
     truths = run_once(streaming=False, max_pages=max_pages)
     return truths
 
