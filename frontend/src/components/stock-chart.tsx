@@ -36,16 +36,17 @@ export default function StockChart() {
     }, []);
 
     return (
-        <div>
-            {data.length > 0 && <h1>Stock: {data[0].s}</h1>}
-            {data.map((el, idx) => (
-                <div key={idx}>
-                    <p>Symbol: {el.s}</p>
-                    <p>Price: {el.p}</p>
-                    <p>Time: {Math.floor(el.t / 1000 / 60)}</p>
-                    <p>Volume: {el.v}</p>
-                </div>
-            ))}
-        </div>
+        <>
+            <div>
+                {data.length > 0 && <h1>Stock: {data[0].s}</h1>}
+                {data.map((el, idx) => (
+                    <div key={idx}>
+                        <p>Price: {el.p}</p>
+                        <p>Time: {Math.floor(el.t / 1000 / 60)}</p>
+                        <p>Volume: {el.v}</p>
+                    </div>
+                ))}
+            </div>
+        </>
     );
 }

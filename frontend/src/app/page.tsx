@@ -1,11 +1,14 @@
 "use client";
 
-import StockChart from "@/components/StockChart";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
 
-export default function Home() {
+export default function Page() {
+
     return (
-        <div>
-            <StockChart />
-        </div>
+        <>
+            <AppSidebar activepage="Dashboard">
+                
+            </AppSidebar>
+        </>
     );
 }
