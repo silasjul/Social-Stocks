@@ -9,10 +9,13 @@ import json
 from datetime import datetime
 
 load_dotenv()
-with open("config.json", "r") as config_file:
+base_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(base_dir, "config.json")
+
+with open(config_path, "r") as config_file:
     config = json.load(config_file)
 
-max_pages = config["max_pages"]
+max_pages = config.get("max_pages", 8)
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Run the Social Stocks scraper.")
