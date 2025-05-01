@@ -1,7 +1,0 @@
-selenium
-beautifulsoup4
-mysql-connector-python
-python-dotenv
-fastapi
-uvicorn[standard]
-
