@@ -1,6 +1,6 @@
 from scraper import get_page_sources
 from truth_parser import parse_truths
-from db import get_last_scraped_href_and_time, insert_truths, update_last_scraped_href_and_time, get_truths_count
+from db import get_last_scraped_href_and_time, insert_truths, update_last_scraped_href_and_time, get_truths_count, get_all_truths
 from dotenv import load_dotenv
 import os
 import argparse
@@ -21,6 +21,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Run the Social Stocks scraper.")
     parser.add_argument("--stream", action="store_true", help="Continuously scrape in streaming mode")
     parser.add_argument("--interval", type=int, default=60, help="Interval between scrapes in streaming mode (seconds)")
+    parser.add_argument("--all", action="store_true", help="Show all truths in database")
     return parser.parse_args()
 
 def run_once(streaming=False, max_pages=None):
@@ -114,12 +115,21 @@ def handle_streaming(interval):
 
 
 
+
+
 def main():
     args = parse_args()
 
     if args.stream:
         print("[i] Running in STREAMING mode!")
         handle_streaming(args.interval)
+        
+    elif args.all:
+        print("Printing all truths")
+        truths = get_all_truths()
+        for t in truths:
+            print(json.dumps([serialize_truth(t) for t in truths], indent=2))
+
     else:
         print("[i] Running in ONE-SHOT mode!")
         truths = handle_one_shot()
