@@ -28,7 +28,7 @@ def run_once(streaming=False, max_pages=None):
     if streaming:
         max_pages = 0
     elif max_pages is None:
-        max_pages = int(os.getenv("MAX_PAGES", 10))
+        max_pages=max_pages
     
     # Inform how many pages MAX_PAGES are set to
     if max_pages == 0:
