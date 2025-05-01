@@ -1,6 +1,6 @@
 from scraper import get_page_sources
 from truth_parser import parse_truths
-from db import get_last_scraped_href_and_time, insert_truths, update_last_scraped_href_and_time, get_truths_count
+from db import get_last_scraped_href_and_time, insert_truths, update_last_scraped_href_and_time, get_truths_count, get_all_truths
 from dotenv import load_dotenv
 import os
 import argparse
@@ -15,12 +15,13 @@ config_path = os.path.join(base_dir, "config.json")
 with open(config_path, "r") as config_file:
     config = json.load(config_file)
 
-max_pages = config.get("max_pages", 8)
+max_pages = config.get("max_pages", 10)
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Run the Social Stocks scraper.")
     parser.add_argument("--stream", action="store_true", help="Continuously scrape in streaming mode")
     parser.add_argument("--interval", type=int, default=60, help="Interval between scrapes in streaming mode (seconds)")
+    parser.add_argument("--all", action="store_true", help="Show all truths in database")
     return parser.parse_args()
 
 def run_once(streaming=False, max_pages=None):
@@ -99,7 +100,6 @@ def serialize_truth(truth):
     }
 
 def handle_one_shot():
-    max_pages = int(os.getenv("MAX_PAGES", 10))
     truths = run_once(streaming=False, max_pages=max_pages)
     return truths
 
@@ -109,12 +109,24 @@ def handle_streaming(interval):
     except KeyboardInterrupt:
         print("\n[i] Exiting steam-mode... Goodbye!")
 
+
+
+
+
+
 def main():
     args = parse_args()
 
     if args.stream:
         print("[i] Running in STREAMING mode!")
         handle_streaming(args.interval)
+        
+    elif args.all:
+        print("Printing all truths")
+        truths = get_all_truths()
+        for t in truths:
+            print(json.dumps([serialize_truth(t) for t in truths], indent=2))
+
     else:
         print("[i] Running in ONE-SHOT mode!")
         truths = handle_one_shot()

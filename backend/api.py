@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import StreamingResponse
 from fastapi import Path
 from db import get_all_truths
 from run import run_once, serialize_truth
@@ -24,4 +24,3 @@ async def stream_truths(interval: int = Path(..., ge=5, le=3600)):
             await asyncio.sleep(interval)
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
-
