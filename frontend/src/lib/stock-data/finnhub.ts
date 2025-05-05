@@ -1,6 +1,5 @@
 import axios from "axios";
-import dotenv from "dotenv";
-dotenv.config();
+import { z } from "zod";
 
 /*
 Finnhub's free plan allows up to 60 api calls / minute
@@ -22,22 +21,31 @@ const finnhub = axios.create({
     },
 });
 
-interface Symbol {
-    description: string;
-    symbol: string;
-}
+// --- getSymbols ---
 
-async function getSymbols(): Promise<Symbol[] | null> {
-    let result = null;
+const SymbolSchema = z.array(
+    z.object({ description: z.string(), symbol: z.string() })
+);
+
+export type SymbolData = z.infer<typeof SymbolSchema>;
+
+async function getSymbols(): Promise<SymbolData> {
     try {
         const response = await finnhub.get(`/stock/symbol`, {
             params: { exchange: "US" },
         });
-        result = response.data as Symbol[];
-    } catch (error) {
-        console.error("Error fetching symbols: ", error);
+        const validatedSymbols = SymbolSchema.parse(response.data);
+        return validatedSymbols;
+    } catch (error: any) {
+        console.log(error.message);
+        if (error instanceof z.ZodError) {
+            throw new Error("Failed zod data parsing: Invalid data structure");
+        } else if (axios.isAxiosError(error)) {
+            throw new Error("Axios error: " + error.message);
+        } else {
+            throw new Error(`Failed fetching symbols: ${error.message}`);
+        }
     }
-    return result;
 }
 
 interface SearchResult {
@@ -95,19 +103,25 @@ interface CompanyProfile {
     name: string; // Apple Inc
 }
 
-async function getCompanyProfile(
-    symbol: string
-): Promise<CompanyProfile | null> {
+async function getCompanyProfile(symbol: string): Promise<CompanyProfile> {
     let result = null;
     try {
         const response = await finnhub.get(`/stock/profile2`, {
             params: { symbol: symbol },
         });
         result = response.data as CompanyProfile;
-    } catch (error) {
-        console.error("Error fetching company profile: ", error);
+        return result;
+    } catch (error: any) {
+        if (error instanceof z.ZodError) {
+            throw new Error(
+                `Invalid data structure received from Polygon API for OHLC.`
+            );
+        } else if (axios.isAxiosError(error)) {
+            throw new Error("Axios error fetching OHCL: " + error.message);
+        } else {
+            throw new Error(`Failed to fetch OHLC: ${error.message}`);
+        }
     }
-    return result;
 }
 
 interface Quote {

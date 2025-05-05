@@ -16,7 +16,7 @@ import {
     SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { ThemeSwitch } from "../theme-switch";
-import { Users, Settings2, House, ChartCandlestick, } from "lucide-react";
+import { Users, Settings2, House, ChartCandlestick } from "lucide-react";
 
 const teams = [
     {
@@ -53,7 +53,6 @@ const navItems = [
 const user = {
     name: "Silas Kierstein",
     email: "silaskierstein@gmail.com",
-    avatar: "/example/user.png",
 };
 
 export function AppSidebar({
