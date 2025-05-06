@@ -7,14 +7,11 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class Scraper:
     def __init__(self):
-        chrome_profile_path = "C:/Users/silas/AppData/Local/Google/Chrome/User Data"
 
-        # --- Selenium setup---
+        # --- Selenium setup ---
         self.options = Options()
-        self.options.add_argument(f"--user-data-dir={chrome_profile_path}") # access to my chrome pass, cookies, history, etc.
-        self.options.add_argument("--profile-directory=Default") # use my default profile
         self.options.add_experimental_option("excludeSwitches", ["enable-automation"]) # Avoid bot detection
-        self.options.add_experimental_option("useAutomationExtension", False)
+        self.options.add_experimental_option("useAutomationExtension", False) # Avoid bot detection
 
         self.driver = webdriver.Chrome(options=self.options)
 

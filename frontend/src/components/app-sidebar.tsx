@@ -15,7 +15,7 @@ import {
     SidebarRail,
     SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { ThemeSwitch } from "../theme-switch";
+import { ThemeSwitch } from "./theme-switch";
 import { Users, Settings2, House, ChartCandlestick } from "lucide-react";
 
 const teams = [

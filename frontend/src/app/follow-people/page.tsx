@@ -1,4 +1,4 @@
-import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 import React from "react";
 
 export default function FollowPeople() {

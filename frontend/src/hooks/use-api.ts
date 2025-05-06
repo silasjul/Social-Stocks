@@ -12,7 +12,7 @@ export function useOHCL(
     timespan: Timespan
 ) {
     const { data, error, isLoading } = useSWR(
-        `/api/stock/ohcl?symbol=${symbol}&multiplier=${multiplier}&timespan=${timespan}`,
+        `/api/stock/ohcl?symbol=${symbol}&multiplier=${multiplier}&timespan=${timespan}f`,
         axiosGet
     );
 
