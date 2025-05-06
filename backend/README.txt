@@ -18,6 +18,12 @@ docker compose --env-file .env up -d
 git fetch
 git log origin/main --oneline
 
+// API
+
+Social-Stocks\backend $ python api.py
+1. Use Fastapi: http://localhost:8000/docs
+2. Get all truths: http://localhost:8000/truths
+3. Stream: http://localhost:8000/stream/{interval} ex: http://localhost:8000/stream/10 
 
 
 Nogle updates:
