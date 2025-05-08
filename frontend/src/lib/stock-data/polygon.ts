@@ -68,15 +68,19 @@ export async function getOHLC(
     multiplier: number,
     timespan: Timespan
 ): Promise<BarData> {
-    const yearsOfData = 5; // At max we can get 2 years (we want all we can get)
-    const now = new Date();
-    const toDate = now.toISOString().slice(0, 10); // formats current date to yyyy-mm-dd
-    now.setFullYear(now.getFullYear() - yearsOfData);
-    const fromDate = now.toISOString().slice(0, 10); // formats year back data
+    // Configure from and to dates in millis
+    let toDateMilliseconds = Date.now();
+    let fromDateMilliseconds = 0;
+    if (["second", "minute", "hour"].includes(timespan)) {
+        fromDateMilliseconds = toDateMilliseconds - 1000 * 60 * 60 * 24 * 8; // 8 days back
+    } else {
+        fromDateMilliseconds =
+            toDateMilliseconds - 1000 * 60 * 60 * 24 * 365 * 2; // 2 years back
+    }
 
     try {
         const response = await polygon.get(
-            `/ticker/${symbol}/range/${multiplier}/${timespan}/${fromDate}/${toDate}`,
+            `/ticker/${symbol}/range/${multiplier}/${timespan}/${fromDateMilliseconds}/${toDateMilliseconds}`,
             { params: { sort: "asc" } }
         );
         const validatedData = BarSchema.parse(response.data);

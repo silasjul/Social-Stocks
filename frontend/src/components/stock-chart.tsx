@@ -8,9 +8,6 @@ import {
     ColorType,
     HistogramSeries,
     CrosshairMode,
-    createSeriesMarkers,
-    SeriesMarkerShape,
-    SeriesMarkerBarPosition,
 } from "lightweight-charts";
 import { useTheme } from "next-themes";
 import React, { useEffect, useRef, useState } from "react";
@@ -46,7 +43,7 @@ export default function StockChart({
         };
         if (!ref.current) return;
 
-        // --- Settign up the chart
+        // --- Chart setup
         const chart = createChart(ref.current, {
             width: ref.current.clientWidth,
             height: ref.current.clientHeight,
@@ -85,7 +82,11 @@ export default function StockChart({
                     : undefined,
             },
         });
-        chart.timeScale().fitContent();
+        chart.timeScale().applyOptions({
+            timeVisible: true,
+            secondsVisible: false
+        });
+        chart.timeScale().fitContent()
 
         // --- Candle chart
         const candleSeries = chart.addSeries(CandlestickSeries, {
@@ -124,17 +125,17 @@ export default function StockChart({
         });
 
         // --- Markers
-        const markers = [
+        /*  const markers = [
             {
                 time: { year: 2025, month: 3, day: 25 },
                 position: "aboveBar" as SeriesMarkerBarPosition,
-                color: "black",
+                color: isDark() ? "white" : "black",
                 shape: "arrowDown" as SeriesMarkerShape,
                 text: "Trump said some stupid shit here.",
                 price: 0,
             },
         ];
-        createSeriesMarkers(candleSeries, markers);
+        createSeriesMarkers(candleSeries, markers); */
 
         // --- Setting data from api
         candleSeries.setData(candleData);

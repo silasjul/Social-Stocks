@@ -168,6 +168,7 @@ function Sidebar({
     side = "left",
     variant = "sidebar",
     collapsible = "offcanvas",
+    includeHeader = false,
     className,
     children,
     ...props
@@ -177,6 +178,7 @@ function Sidebar({
     collapsible?: "offcanvas" | "icon" | "none";
     activepage?: Pages;
     isCollapsed?: boolean;
+    includeHeader?: boolean;
 }) {
     const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
 
