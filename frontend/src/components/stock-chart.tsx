@@ -6,12 +6,11 @@ import {
     CandlestickSeries,
     createChart,
     ColorType,
-    AreaSeries,
     HistogramSeries,
     CrosshairMode,
-    LineStyle,
-    DeepPartial,
-    LineWidth,
+    createSeriesMarkers,
+    SeriesMarkerShape,
+    SeriesMarkerBarPosition,
 } from "lightweight-charts";
 import { useTheme } from "next-themes";
 import React, { useEffect, useRef, useState } from "react";
@@ -47,7 +46,10 @@ export default function StockChart({
         };
         if (!ref.current) return;
 
+        // --- Settign up the chart
         const chart = createChart(ref.current, {
+            width: ref.current.clientWidth,
+            height: ref.current.clientHeight,
             layout: {
                 textColor: isDark() ? "#DDD" : "black",
                 background: {
@@ -83,7 +85,9 @@ export default function StockChart({
                     : undefined,
             },
         });
+        chart.timeScale().fitContent();
 
+        // --- Candle chart
         const candleSeries = chart.addSeries(CandlestickSeries, {
             upColor: "#26a69a",
             downColor: "#ef5350",
@@ -104,6 +108,7 @@ export default function StockChart({
                 borderVisible: false,
             });
 
+        // --- Volume chart
         const volumeSeries = chart.addSeries(HistogramSeries, {
             color: "#26a69a",
             priceFormat: {
@@ -118,10 +123,22 @@ export default function StockChart({
             },
         });
 
+        // --- Markers
+        const markers = [
+            {
+                time: { year: 2025, month: 3, day: 25 },
+                position: "aboveBar" as SeriesMarkerBarPosition,
+                color: "black",
+                shape: "arrowDown" as SeriesMarkerShape,
+                text: "Trump said some stupid shit here.",
+                price: 0,
+            },
+        ];
+        createSeriesMarkers(candleSeries, markers);
+
+        // --- Setting data from api
         candleSeries.setData(candleData);
         volumeSeries.setData(volumeData);
-
-        chart.timeScale().fitContent();
 
         window.addEventListener("resize", handleResize);
 
@@ -130,7 +147,7 @@ export default function StockChart({
 
             chart.remove();
         };
-    }, [candleData, volumeData]);
+    }, [candleData, volumeData, theme]);
 
     if (isLoading) return <div>Loading...</div>;
 

@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/tooltip";
 import { User } from "../sidebar/nav-user";
 import { NavItems } from "../sidebar/nav-main";
-import { Pages } from "../sidebar/app-sidebar";
+import { Pages } from "../app-sidebar";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
