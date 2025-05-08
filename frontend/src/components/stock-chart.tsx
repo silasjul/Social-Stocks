@@ -12,6 +12,7 @@ import {
 import { useTheme } from "next-themes";
 import React, { useEffect, useRef, useState } from "react";
 import { Skeleton } from "./ui/skeleton";
+import { useSidebar } from "./ui/sidebar";
 
 interface StockChartProps {
     symbol: string;
@@ -36,13 +37,15 @@ export default function StockChart({
     const ref = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
+        if (!ref.current) return;
+
         const handleResize = () => {
+            console.log("resize triggered");
             chart.applyOptions({
                 width: ref.current?.clientWidth,
                 height: ref.current?.clientHeight,
             });
         };
-        if (!ref.current) return;
 
         // --- Chart setup
         const chart = createChart(ref.current, {
@@ -162,5 +165,10 @@ export default function StockChart({
             </div>
         );
 
-    return <div className="w-full h-full cursor-crosshair" ref={ref} />;
+    return (
+        <div
+            className={`w-full h-full cursor-crosshair`}
+            ref={ref}
+        />
+    );
 }

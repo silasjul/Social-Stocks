@@ -5,6 +5,7 @@ import { SearchSelector } from "@/components/search-selector";
 import StockChart from "@/components/stock-chart";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useTheme } from "next-themes";
 import { useState } from "react";
 
 const defaultSymbols = [
@@ -20,6 +21,7 @@ const defaultSymbols = [
 ];
 
 export default function Charts() {
+    const { theme } = useTheme();
     const [symbol, setSymbol] = useState("");
     const [person, setPerson] = useState("");
 
@@ -49,25 +51,29 @@ export default function Charts() {
                     <ThemeSwitch />
                 </div>
             </header>
-            {symbol && (
-                <div className="w-full h-full">
-                    <StockChart
-                        symbol={symbol}
-                        multiplier={5}
-                        timeSpan={"minute"}
-                    />
-                </div>
-            )}
-            {!symbol && !person && (
-                <div className="flex-col justify-center ml-16 mt-4">
-                    <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-                        Charts
-                    </h1>
-                    <p className="text-xl text-muted-foreground mt-1">
-                        Select from options to fetch data.
-                    </p>
-                </div>
-            )}
+            <div className="">
+                {symbol && (
+                    <div
+                        className={`w-screen h-full absolute bottom-0 right-0`}
+                    >
+                        <StockChart
+                            symbol={symbol}
+                            multiplier={5}
+                            timeSpan={"minute"}
+                        />
+                    </div>
+                )}
+                {!symbol && !person && (
+                    <div className="flex-col justify-center ml-16 mt-4">
+                        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                            Charts
+                        </h1>
+                        <p className="text-xl text-muted-foreground mt-1">
+                            Select from options to get started.
+                        </p>
+                    </div>
+                )}
+            </div>
         </AppSidebar>
     );
 }
