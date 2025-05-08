@@ -41,7 +41,7 @@ const BarSchema = z.object({
             n: z.number(), // number of transactions
         })
     ),
-    count: z.number(), // amount of bar objects
+    count: z.number(), // number of bars in results
 });
 
 export type BarData = z.infer<typeof BarSchema>;
@@ -50,17 +50,17 @@ export type BarData = z.infer<typeof BarSchema>;
  * Fetches historical Open/High/Low/Close (OHLC) data for a given stock symbol
  * from the Polygon.io API.
  *
- * @param {string} symbol - The stock ticker symbol to fetch data for (e.g., "AAPL", "MSFT").
- * @param {number} multiplier - The size of the time window multiplier (e.g., 1, 5).
- * @param {Timespan} timespan - The type of time window ('second', 'minute', 'hour', 'day', 'week', 'month').
+ @param {string} symbol - The stock ticker symbol to fetch data for (e.g., "AAPL", "MSFT").
+ @param {number} multiplier - The size of the time window multiplier (e.g., 1, 5).
+ @param {Timespan} timespan - The type of time window ('second', 'minute', 'hour', 'day', 'week', 'month'). 
  * Used in combination with the multiplier (e.g., 1 day, 5 minute).
- * @returns {Promise<BarData>} A promise that resolves with the validated OHLC data
+ @returns {Promise<BarData>} A promise that resolves with the validated OHLC data
  * for the specified symbol over the past year.
- * @throws {Error} Throws an error if the data received from the Polygon API fails
+ @throws {Error} Throws an error if the data received from the Polygon API fails
  * validation against BarSchema (message: "Invalid data structure...").
- * @throws {Error} Throws an error if the Axios request to the Polygon API fails
+ @throws {Error} Throws an error if the Axios request to the Polygon API fails
  * (e.g., network error, 4xx/5xx status codes) (message: "Axios error...").
- * @throws {Error} Throws an error for any other unexpected issues during execution
+ @throws {Error} Throws an error for any other unexpected issues during execution
  * (message: "Failed to fetch OHLC...").
  */
 export async function getOHLC(
@@ -68,11 +68,11 @@ export async function getOHLC(
     multiplier: number,
     timespan: Timespan
 ): Promise<BarData> {
-    // Return a year of data
+    const yearsOfData = 5; // At max we can get 2 years (we want all we can get)
     const now = new Date();
     const toDate = now.toISOString().slice(0, 10); // formats current date to yyyy-mm-dd
-    now.setFullYear(now.getFullYear() - 1);
-    const fromDate = now.toISOString().slice(0, 10); // formats date a year back
+    now.setFullYear(now.getFullYear() - yearsOfData);
+    const fromDate = now.toISOString().slice(0, 10); // formats year back data
 
     try {
         const response = await polygon.get(
