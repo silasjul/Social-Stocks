@@ -11,6 +11,7 @@ import {
 } from "lightweight-charts";
 import { useTheme } from "next-themes";
 import React, { useEffect, useRef, useState } from "react";
+import { Skeleton } from "./ui/skeleton";
 
 interface StockChartProps {
     symbol: string;
@@ -84,9 +85,9 @@ export default function StockChart({
         });
         chart.timeScale().applyOptions({
             timeVisible: true,
-            secondsVisible: false
+            secondsVisible: false,
         });
-        chart.timeScale().fitContent()
+        chart.timeScale().fitContent();
 
         // --- Candle chart
         const candleSeries = chart.addSeries(CandlestickSeries, {
@@ -150,9 +151,16 @@ export default function StockChart({
         };
     }, [candleData, volumeData, theme]);
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <Skeleton className="w-full h-full" />;
 
-    if (isError) return <div>Error loading data.</div>;
+    if (isError)
+        return (
+            <div className="w-1/4 h-1/4 border border-black rounded-lg flex justify-center items-center m-auto">
+                <h4 className="scroll-m-20 text-lg font-semibold tracking-tight">
+                    Error loading chart data.
+                </h4>
+            </div>
+        );
 
     return <div className="w-full h-full cursor-crosshair" ref={ref} />;
 }
