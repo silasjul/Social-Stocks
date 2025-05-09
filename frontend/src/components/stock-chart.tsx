@@ -12,7 +12,6 @@ import {
 import { useTheme } from "next-themes";
 import React, { useEffect, useRef, useState } from "react";
 import { Skeleton } from "./ui/skeleton";
-import { useSidebar } from "./ui/sidebar";
 
 interface StockChartProps {
     symbol: string;
@@ -38,14 +37,6 @@ export default function StockChart({
 
     useEffect(() => {
         if (!ref.current) return;
-
-        const handleResize = () => {
-            console.log("resize triggered");
-            chart.applyOptions({
-                width: ref.current?.clientWidth,
-                height: ref.current?.clientHeight,
-            });
-        };
 
         // --- Chart setup
         const chart = createChart(ref.current, {
@@ -145,6 +136,15 @@ export default function StockChart({
         candleSeries.setData(candleData);
         volumeSeries.setData(volumeData);
 
+        // --- Resize the canvas on window resize
+        const handleResize = () => {
+            console.log("resize triggered");
+            chart.applyOptions({
+                width: ref.current?.clientWidth,
+                height: ref.current?.clientHeight,
+            });
+        };
+
         window.addEventListener("resize", handleResize);
 
         return () => {
@@ -158,17 +158,12 @@ export default function StockChart({
 
     if (isError)
         return (
-            <div className="w-1/4 h-1/4 border border-black rounded-lg flex justify-center items-center m-auto">
+            <div className="w-full h-full flex justify-center items-center">
                 <h4 className="scroll-m-20 text-lg font-semibold tracking-tight">
                     Error loading chart data.
                 </h4>
             </div>
         );
 
-    return (
-        <div
-            className={`w-full h-full cursor-crosshair`}
-            ref={ref}
-        />
-    );
+    return <div className={`w-full h-full cursor-crosshair`} ref={ref} />;
 }
