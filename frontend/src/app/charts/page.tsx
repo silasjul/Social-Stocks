@@ -12,19 +12,22 @@ import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { dummyPeople, dummyPosts } from "@/lib/dummy-data";
 import { defaultSymbols, timeFrames } from "@/lib/chart-configs";
-import { Person, Post } from "@/lib/interfaces";
+import { Person, Post, TimeFrame } from "@/lib/interfaces";
+import TimeFrameButton from "@/components/timeframe-btn";
 
 export default function Charts() {
-    const { theme } = useTheme();
     const [symbol, setSymbol] = useState("");
     const [person, setPerson] = useState("");
     const [selectedPerson, setSelectedPerson] = useState<Person>();
     const [posts, setPosts] = useState<Post[]>([]);
-    const [timeFrame, setTimeFrame] = useState(timeFrames[0]); // 5-minute as defdault
+    const [hoveredPost, setHoveredPost] = useState<Post>();
+    const [timeFrame, setTimeFrame] = useState(timeFrames[0]);
 
     useEffect(() => {
         setPosts(dummyPosts);
-        setSelectedPerson(dummyPeople.find((p) => p.username == person));
+        setSelectedPerson(
+            dummyPeople.find((p) => p.username.slice(1) == person)
+        );
     }, [person]);
 
     return (
@@ -35,80 +38,77 @@ export default function Charts() {
                 </div>
                 <div className="flex gap-4">
                     <SearchSelector
-                        options={dummyPeople.map((p) => p.username)}
+                        options={dummyPeople.map((p) => ({
+                            value: p.username.slice(1),
+                            img: p.img,
+                        }))}
                         category={"Person"}
-                        value={person}
-                        setValue={setPerson}
-                        imageFolder={"none"}
+                        state={person}
+                        setState={setPerson}
                     />
                     <SearchSelector
-                        options={defaultSymbols}
+                        options={defaultSymbols.map((s) => ({
+                            value: s,
+                            img: `/logos/${s}.svg`,
+                        }))}
                         category={"Symbol"}
-                        value={symbol}
-                        setValue={setSymbol}
-                        imageFolder={"logos"}
+                        state={symbol}
+                        setState={setSymbol}
                     />
                 </div>
                 <div className="flex gap-1">
                     {timeFrames.map((tf) => (
-                        <Button
-                            suppressHydrationWarning
+                        <TimeFrameButton
                             key={tf.name}
-                            className={clsx("w-8 h-8", {
-                                "bg-black text-white hover:bg-black":
-                                    theme == "dark" &&
-                                    tf.name == timeFrame.name,
-                                "bg-white text-black hover:bg-white":
-                                    theme == "light" &&
-                                    tf.name == timeFrame.name,
-                            })}
-                            onClick={() => {
-                                setTimeFrame(tf);
-                            }}
-                        >
-                            {tf.name}
-                        </Button>
+                            tf={tf}
+                            onClick={() => setTimeFrame(tf)}
+                            selectedTf={timeFrame.name}
+                        />
                     ))}
                 </div>
                 <div className="ml-auto m-4">
                     <ThemeSwitch />
                 </div>
             </header>
-            <section>
-                {symbol ? (
-                    <div
-                        className={`w-screen h-full absolute bottom-0 right-0`}
-                    >
-                        <StockChart
-                            symbol={symbol}
-                            multiplier={timeFrame.multiplier}
-                            timeSpan={timeFrame.time}
-                        />
-                    </div>
-                ) : (
-                    <div className="flex-col justify-center ml-16 mt-4 mb-6">
-                        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-                            Charts
-                        </h1>
-                        <p className="text-xl text-muted-foreground mt-1">
-                            Select from options to get started.
-                        </p>
-                    </div>
-                )}
-            </section>
-            <section>
-                {person &&
-                    posts.map((post, idx) => {
-                        if (selectedPerson)
-                            return (
-                                <PostCard
-                                    key={idx}
-                                    posts={post}
-                                    person={selectedPerson}
-                                />
-                            );
-                    })}
-            </section>
+            <div className="mx-16">
+                <section>
+                    {symbol ? (
+                        <div
+                            className={`w-screen h-full absolute bottom-0 right-0`}
+                        >
+                            <StockChart
+                                symbol={symbol}
+                                multiplier={timeFrame.multiplier}
+                                timeSpan={timeFrame.time}
+                                post={hoveredPost}
+                            />
+                        </div>
+                    ) : (
+                        <div className="flex-col justify-center my-6">
+                            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                                Charts
+                            </h1>
+                            <p className="text-xl text-muted-foreground mt-1">
+                                Select a symbol to get started.
+                            </p>
+                        </div>
+                    )}
+                </section>
+                <section className="absolute flex gap-4 z-10 mr-4">
+                    {person &&
+                        posts.map((post, idx) => {
+                            if (selectedPerson)
+                                return (
+                                    <PostCard
+                                        key={idx}
+                                        post={post}
+                                        person={selectedPerson}
+                                        onHover={setHoveredPost}
+                                    />
+                                );
+                        })}
+                </section>
+            </div>
         </AppSidebar>
     );
 }

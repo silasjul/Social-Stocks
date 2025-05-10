@@ -23,15 +23,13 @@ import Image from "next/image";
 export function SearchSelector({
     options,
     category,
-    value,
-    imageFolder,
-    setValue,
+    state,
+    setState,
 }: {
     category: string;
-    options: string[];
-    value: string;
-    imageFolder: string;
-    setValue: (arg0: string) => void;
+    options: { value: string; img: string }[];
+    state: string;
+    setState: (arg0: string) => void;
 }) {
     const [open, setOpen] = React.useState(false);
     const imageSize = 20;
@@ -46,16 +44,20 @@ export function SearchSelector({
                     className="w-[200px] justify-between"
                 >
                     <div>
-                        {value ? (
+                        {state ? (
                             <div className="flex items-center gap-2">
                                 <Image
                                     className="rounded-full"
-                                    src={`/${imageFolder}/${value}.svg`}
+                                    src={
+                                        options.find(
+                                            (opt) => opt.value == state
+                                        )?.img ?? ""
+                                    }
                                     alt={"LOGO"}
                                     width={imageSize}
                                     height={imageSize}
                                 />
-                                {value}
+                                {state}
                             </div>
                         ) : (
                             `Select ${category}...`
@@ -75,11 +77,11 @@ export function SearchSelector({
                         <CommandGroup>
                             {options.map((option) => (
                                 <CommandItem
-                                    key={option}
-                                    value={option}
+                                    key={option.value}
+                                    value={option.value}
                                     onSelect={(currentValue) => {
-                                        setValue(
-                                            currentValue === value
+                                        setState(
+                                            currentValue === state
                                                 ? ""
                                                 : currentValue
                                         );
@@ -89,17 +91,17 @@ export function SearchSelector({
                                     <div className="flex items-center gap-2">
                                         <Image
                                             className="rounded-full"
-                                            src={`/${imageFolder}/${option}.svg`}
+                                            src={option.img}
                                             alt={"LOGO"}
                                             width={imageSize}
                                             height={imageSize}
                                         />
-                                        {option}
+                                        {option.value}
                                     </div>
                                     <Check
                                         className={cn(
                                             "ml-auto",
-                                            value === option
+                                            state === option.value
                                                 ? "opacity-100"
                                                 : "opacity-0"
                                         )}

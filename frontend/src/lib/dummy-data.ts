@@ -1,4 +1,4 @@
-import { Post, Person } from "@/app/charts/page";
+import { Person, Post } from "./interfaces";
 
 /* Dummy data for testing */
 

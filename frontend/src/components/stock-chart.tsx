@@ -8,21 +8,28 @@ import {
     ColorType,
     HistogramSeries,
     CrosshairMode,
+    createSeriesMarkers,
+    SeriesMarkerBarPosition,
+    SeriesMarkerShape,
+    Time,
 } from "lightweight-charts";
 import { useTheme } from "next-themes";
 import React, { useEffect, useRef, useState } from "react";
 import { Skeleton } from "./ui/skeleton";
+import { Post } from "@/lib/interfaces";
 
 interface StockChartProps {
     symbol: string;
     multiplier: number;
     timeSpan: Timespan;
+    post?: Post;
 }
 
 export default function StockChart({
     symbol,
     multiplier,
     timeSpan,
+    post,
 }: StockChartProps) {
     const { volumeData, candleData, isLoading, isError } = useOHCL(
         symbol,
@@ -119,18 +126,20 @@ export default function StockChart({
             },
         });
 
-        // --- Markers
-        /*  const markers = [
-            {
-                time: { year: 2025, month: 3, day: 25 },
-                position: "aboveBar" as SeriesMarkerBarPosition,
-                color: isDark() ? "white" : "black",
-                shape: "arrowDown" as SeriesMarkerShape,
-                text: "Trump said some stupid shit here.",
-                price: 0,
-            },
-        ];
-        createSeriesMarkers(candleSeries, markers); */
+        // --- Post marker
+        if (post) {
+            const date = new Date(post.time);
+            createSeriesMarkers(candleSeries, [
+                {
+                    time: Math.floor(date.getTime() / 1000) as Time,
+                    position: "aboveBar" as SeriesMarkerBarPosition,
+                    color: isDark() ? "white" : "black",
+                    shape: "arrowDown" as SeriesMarkerShape,
+                    text: "Trump said some stupid shit here.",
+                    price: 0,
+                },
+            ]);
+        }
 
         // --- Setting data from api
         candleSeries.setData(candleData);
@@ -152,7 +161,7 @@ export default function StockChart({
 
             chart.remove();
         };
-    }, [candleData, volumeData, theme]);
+    }, [candleData, volumeData, theme, post]);
 
     if (isLoading) return <Skeleton className="w-full h-full" />;
 
