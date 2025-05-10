@@ -8,7 +8,7 @@ import { useFAANG } from "@/hooks/use-api";
 import { dummyPeople, dummyPosts } from "@/lib/dummy-data";
 
 export default function Page() {
-    const faangData = useFAANG(10000); // arg: Seconds between each fetch
+    const faangData = useFAANG(120); // arg: Seconds between each fetch
 
     return (
         <>
