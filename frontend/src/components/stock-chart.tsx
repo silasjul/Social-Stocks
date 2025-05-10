@@ -1,6 +1,6 @@
 "use client";
 
-import { useOHCL } from "@/hooks/use-api";
+import { useOHCL, useTrades } from "@/hooks/use-api";
 import { Timespan } from "@/lib/stock-data/polygon";
 import {
     CandlestickSeries,
@@ -43,6 +43,7 @@ export default function StockChart({
     const { theme } = useTheme();
     const isDark = () => theme == "dark";
     const [lockScale, setLockScale] = useState(true);
+    const updateData = useTrades(symbol);
 
     const ref = useRef<HTMLDivElement | null>(null);
 
@@ -149,6 +150,19 @@ export default function StockChart({
         candleSeries.setData(candleData);
         volumeSeries.setData(volumeData);
 
+        // --- Updates from socket
+        if (updateData) {
+            const last = candleData[candleData.length - 1];
+            const current = updateData.p;
+            candleSeries.update({
+                time: (updateData.t / 1000) as Time,
+                open: last.open < current ? current : last.open,
+                high: last.high < current ? current : last.open,
+                close: last.close > current ? current : last.open,
+                low: last.low > current ? current : last.open,
+            });
+        }
+
         // --- Resize the canvas on window resize
         const handleResize = () => {
             if (!resize) return;
@@ -165,7 +179,7 @@ export default function StockChart({
 
             chart.remove();
         };
-    }, [candleData, volumeData, theme, post, dependency]);
+    }, [candleData, volumeData, theme, post, dependency, updateData]);
 
     if (isLoading) return <Skeleton className="w-full h-full" />;
 

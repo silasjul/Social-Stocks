@@ -72,11 +72,11 @@ interface Data {
     v: number;
 }
 export function useTrades(symbol: string) {
-    const [data, setData] = useState<Data[]>([]);
+    if (!symbol) return;
+
+    const [update, setUpdate] = useState<Data>();
 
     useEffect(() => {
-        setData([]);
-
         const socket = new WebSocket(
             "wss://ws.finnhub.io?token=cve2j0hr01qujfbq48p0cve2j0hr01qujfbq48pg"
         );
@@ -88,15 +88,25 @@ export function useTrades(symbol: string) {
 
         // Listen for messages
         socket.addEventListener("message", (event) => {
-            console.log(event.data);
+            try {
+                const message = JSON.parse(event.data);
+
+                if (message.type === "ping") {
+                    console.log("Received ping message");
+                    return;
+                }
+
+                setUpdate(message as Data);
+            } catch (error) {
+                console.error("Error parsing WebSocket message:", error);
+            }
         });
 
         return () => {
             socket.close();
         };
     }, [symbol]);
-
-    return data;
+    return update;
 }
 
 export function useQuote(symbol: string) {

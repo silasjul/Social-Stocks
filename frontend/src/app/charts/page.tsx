@@ -5,14 +5,11 @@ import PostCard from "@/components/post-card";
 import { SearchSelector } from "@/components/search-selector";
 import StockChart from "@/components/stock-chart";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { useTheme } from "next-themes";
-import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { dummyPeople, dummyPosts } from "@/lib/dummy-data";
 import { defaultSymbols, timeFrames } from "@/lib/configs";
-import { Person, Post, TimeFrame } from "@/lib/interfaces";
+import { Person, Post } from "@/lib/interfaces";
 import TimeFrameButton from "@/components/timeframe-btn";
 
 export default function Charts() {
