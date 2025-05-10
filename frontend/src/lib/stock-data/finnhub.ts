@@ -93,7 +93,7 @@ async function getBasicFinancials(
     return result;
 }
 
-interface CompanyProfile {
+export interface CompanyProfile {
     country: string; // US
     currency: string; // USD
     exchange: string; // NASDAQ NMS
@@ -124,7 +124,7 @@ async function getCompanyProfile(symbol: string): Promise<CompanyProfile> {
     }
 }
 
-interface Quote {
+export interface Quote {
     c: number; // Current price
     d: number; // Change in price since last close
     dp: number; // d in percentage

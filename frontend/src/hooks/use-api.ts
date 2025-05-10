@@ -1,4 +1,5 @@
-import { SymbolData } from "@/lib/stock-data/finnhub";
+import { faang } from "@/lib/configs";
+import { CompanyProfile, Quote, SymbolData } from "@/lib/stock-data/finnhub";
 import { BarData, Timespan } from "@/lib/stock-data/polygon";
 import axios from "axios";
 import { UTCTimestamp } from "lightweight-charts";
@@ -57,7 +58,6 @@ export function useOHCL(
 
 export function useSymbols() {
     const { data, error, isLoading } = useSWR(`/api/stock/symbols`, axiosGet);
-    console.log(data);
     return {
         data: data as SymbolData,
         isLoading,
@@ -97,4 +97,58 @@ export function useTrades(symbol: string) {
     }, [symbol]);
 
     return data;
+}
+
+export function useQuote(symbol: string) {
+    const { data, isLoading, error } = useSWR(
+        `api/stock/quote?symbol=${symbol}`,
+        axiosGet
+    );
+    return { data: data as Quote, isLoading, error };
+}
+
+export interface FaangQuote {
+    symbol: string;
+    data: Quote;
+}
+export function useFAANG(interval: number) {
+    const [faangQuotes, setFaangQuotes] = useState<FaangQuote[]>([]);
+
+    useEffect(() => {
+        const fetchFAANGData = async () => {
+            try {
+                const quote = await Promise.all(
+                    faang.map(async (symbol) => {
+                        const quote = await axiosGet(
+                            `api/stock/quote?symbol=${symbol}`
+                        );
+                        return {
+                            symbol: symbol,
+                            data: quote,
+                        };
+                    })
+                );
+                setFaangQuotes(quote as FaangQuote[]);
+            } catch (error) {
+                console.error("Error fetching FAANG data:", error);
+            }
+        };
+
+        fetchFAANGData();
+
+        const intervalRef = setInterval(fetchFAANGData, interval * 1000);
+
+        return () => clearInterval(intervalRef);
+    }, []);
+
+    return faangQuotes;
+}
+
+export function useCompanyProfile(symbol: string) {
+    const res = useSWR(`api/stock/company/profile?symbol=${symbol}`, axiosGet);
+    return {
+        data: res.data as CompanyProfile,
+        isLoading: res.isLoading,
+        error: res.error,
+    };
 }

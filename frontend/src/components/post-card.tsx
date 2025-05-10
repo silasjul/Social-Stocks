@@ -8,7 +8,7 @@ export default function PostCard({
 }: {
     post: Post;
     person: Person;
-    onHover: (arg: Post | undefined) => void;
+    onHover?: (arg: Post | undefined) => void;
 }) {
     const date = new Date(post.time);
     const dateStr = date.toString().slice(4, 21); // month day year hour:minute
@@ -16,8 +16,8 @@ export default function PostCard({
     return (
         <div
             className="bg-background border rounded-lg p-4"
-            onMouseEnter={() => onHover(post)}
-            onMouseLeave={() => onHover(undefined)}
+            onMouseEnter={() => onHover && onHover(post)}
+            onMouseLeave={() => onHover && onHover(undefined)}
         >
             <div className="flex gap-2">
                 <div>

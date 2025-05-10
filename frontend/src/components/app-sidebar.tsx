@@ -80,16 +80,17 @@ export function AppSidebar({
                 <SidebarRail />
             </Sidebar>
             <SidebarInset>
-                {includeHeader && (
-                    <header className="sticky top-0 flex h-16 shrink-0 items-center gap-2 z-10">
-                        <div className="flex items-center gap-2 px-4">
-                            <SidebarTrigger className="-ml-1" />
-                        </div>
-                        <div className="ml-auto m-4">
-                            <ThemeSwitch />
-                        </div>
-                    </header>
-                )}
+                {includeHeader ||
+                    (includeHeader == undefined && (
+                        <header className="sticky top-0 flex h-16 shrink-0 items-center gap-2 z-10">
+                            <div className="flex items-center gap-2 px-4">
+                                <SidebarTrigger className="-ml-1" />
+                            </div>
+                            <div className="ml-auto m-4">
+                                <ThemeSwitch />
+                            </div>
+                        </header>
+                    ))}
                 {props.children}
             </SidebarInset>
         </SidebarProvider>

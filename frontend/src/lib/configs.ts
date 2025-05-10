@@ -1,5 +1,7 @@
 import { TimeFrame } from "./interfaces";
 
+/* Some global variables */
+
 const defaultSymbols = [
     "AAPL",
     "TSLA",
@@ -11,6 +13,8 @@ const defaultSymbols = [
     "MSFT",
     "GOOGL",
 ];
+
+const faang = ["META", "AAPL", "AMZN", "NFLX", "GOOGL"];
 
 const timeFrames: TimeFrame[] = [
     {
@@ -55,4 +59,4 @@ const timeFrames: TimeFrame[] = [
     },
 ];
 
-export { defaultSymbols, timeFrames };
+export { defaultSymbols, timeFrames, faang };

@@ -11,7 +11,7 @@ import { useTheme } from "next-themes";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { dummyPeople, dummyPosts } from "@/lib/dummy-data";
-import { defaultSymbols, timeFrames } from "@/lib/chart-configs";
+import { defaultSymbols, timeFrames } from "@/lib/configs";
 import { Person, Post, TimeFrame } from "@/lib/interfaces";
 import TimeFrameButton from "@/components/timeframe-btn";
 
@@ -84,7 +84,7 @@ export default function Charts() {
                             />
                         </div>
                     ) : (
-                        <div className="flex-col justify-center my-6">
+                        <div className="flex-col my-6">
                             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                                 Charts
                             </h1>

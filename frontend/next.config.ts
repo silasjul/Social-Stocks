@@ -6,7 +6,10 @@ const nextConfig: NextConfig = {
 
 module.exports = {
     images: {
-        remotePatterns: [new URL("https://pbs.twimg.com/**")],
+        remotePatterns: [
+            new URL("https://pbs.twimg.com/**"),
+            new URL("https://static2.finnhub.io/**"),
+        ],
     },
 };
 
