@@ -23,6 +23,8 @@ interface StockChartProps {
     multiplier: number;
     timeSpan: Timespan;
     post?: Post;
+    resize?: boolean;
+    dependency?: any;
 }
 
 export default function StockChart({
@@ -30,6 +32,8 @@ export default function StockChart({
     multiplier,
     timeSpan,
     post,
+    resize,
+    dependency,
 }: StockChartProps) {
     const { volumeData, candleData, isLoading, isError } = useOHCL(
         symbol,
@@ -147,7 +151,7 @@ export default function StockChart({
 
         // --- Resize the canvas on window resize
         const handleResize = () => {
-            console.log("resize triggered");
+            if (!resize) return;
             chart.applyOptions({
                 width: ref.current?.clientWidth,
                 height: ref.current?.clientHeight,
@@ -161,7 +165,7 @@ export default function StockChart({
 
             chart.remove();
         };
-    }, [candleData, volumeData, theme, post]);
+    }, [candleData, volumeData, theme, post, dependency]);
 
     if (isLoading) return <Skeleton className="w-full h-full" />;
 

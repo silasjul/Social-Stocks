@@ -6,8 +6,11 @@ import QuoteCard from "@/components/quote-card";
 import StockChart from "@/components/stock-chart";
 import { useFAANG } from "@/hooks/use-api";
 import { dummyPeople, dummyPosts } from "@/lib/dummy-data";
+import Image from "next/image";
+import { useState } from "react";
 
 export default function Page() {
+    const [symbol, setSymbol] = useState("");
     const faangData = useFAANG(120); // arg: Seconds between each fetch
 
     return (
@@ -40,15 +43,46 @@ export default function Page() {
                                 </div>
                             </div>
                             <div className="flex flex-col flex-grow">
-                                <h3 className="mb-2 scroll-m-20 text-xl font-semibold tracking-tight">
-                                    Chart
-                                </h3>
-                                <div className="border rounded-lg flex-grow">
-                                    <StockChart
-                                        symbol={"TSLA"}
-                                        multiplier={1}
-                                        timeSpan={"day"}
-                                    />{" "}
+                                <div className="flex gap-2 items-center">
+                                    <h3 className="mb-2 scroll-m-20 text-xl font-semibold tracking-tight">
+                                        Chart
+                                    </h3>
+                                    <div>
+                                        {faangData.map((f) => (
+                                            <button
+                                                key={f.symbol}
+                                                className="ml-2"
+                                                onClick={() =>
+                                                    setSymbol(f.symbol)
+                                                }
+                                            >
+                                                <Image
+                                                    className={`rounded-full duration-200 active:scale-150 hover:scale-110 ${
+                                                        f.symbol == symbol &&
+                                                        "border border-blue-500"
+                                                    }`}
+                                                    width={22}
+                                                    height={22}
+                                                    src={`/logos/${f.symbol}.svg`}
+                                                    alt={"logo"}
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="border rounded-lg flex-grow flex justify-center items-center">
+                                    {symbol ? (
+                                        <StockChart
+                                            symbol={symbol}
+                                            multiplier={1}
+                                            timeSpan={"day"}
+                                            resize={false}
+                                        />
+                                    ) : (
+                                        <p className="opacity-80">
+                                            Select stock
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         </div>

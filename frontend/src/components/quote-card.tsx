@@ -2,6 +2,7 @@ import { FaangQuote, useCompanyProfile } from "@/hooks/use-api";
 import { Dot } from "lucide-react";
 import Image from "next/image";
 import React from "react";
+import { Skeleton } from "./ui/skeleton";
 
 /* 
 export interface Quote {
@@ -24,9 +25,13 @@ export default function QuoteCard({ quote }: { quote: FaangQuote }) {
     };
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <Skeleton className="w-[203px] h-[80px] rounded-lg" />;
     } else if (error) {
-        return <div>Error.</div>;
+        return (
+            <div className="w-[200px] h-[80px] rounded-lg flex items-center justify-center">
+                <p>Error.</p>
+            </div>
+        );
     } else
         return (
             <div className="border rounded-lg p-4">
