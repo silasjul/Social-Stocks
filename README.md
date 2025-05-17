@@ -31,7 +31,6 @@ This project utilizes a combination of modern web technologies:
 
 ## Features
 
--   **Stock Data Visualization:** View historical and real-time stock data.
--   **Influencer Tweet Feed:** Displays tweets scraped from a curated list of influential people in the finance space.
--   **Tweet Influence Score:** Each relevant tweet is analyzed and assigned a score indicating its potential probability to influence market sentiment or stock prices.
--   **User Accounts:** You can sign-up to save you selected people and stocks for easy use in the future.
+-   **Stock Data Visualization:** View stock data.
+-   **Influencer Tweet Feed:** Displays tweets scraped from the list of people you follow.
+-   **Tweet Markers** Hover over the tweets to see where it was posted on the charts.
