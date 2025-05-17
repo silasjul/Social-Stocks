@@ -10,6 +10,7 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
+import Link from "next/link";
 
 export interface NavItems {
     items: {
@@ -35,7 +36,7 @@ export function NavMain({ items }: NavItems) {
                     >
                         <SidebarMenuItem>
                             <CollapsibleTrigger asChild>
-                                <a href={item.url}>
+                                <Link href={item.url}>
                                     <SidebarMenuButton
                                         tooltip={item.title}
                                         className="cursor-pointer"
@@ -44,7 +45,7 @@ export function NavMain({ items }: NavItems) {
                                         {item.icon && <item.icon />}
                                         <span>{item.title}</span>
                                     </SidebarMenuButton>
-                                </a>
+                                </Link>
                             </CollapsibleTrigger>
                         </SidebarMenuItem>
                     </Collapsible>

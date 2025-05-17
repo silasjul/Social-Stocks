@@ -16,6 +16,7 @@ class Profile(BaseModel):
         return f"Profile: {self.profile_name}, Username: {self.username}, Description: {self.description_text}, img_url: {self.img_url}"
 
 class Tweet(BaseModel):
+    username: str
     text: str
     time: str
     comments: int
@@ -34,7 +35,7 @@ class Twitter(Scraper):
         tweet_containers = self.driver.find_elements(By.XPATH, "//article[@data-testid='tweet']")
         return tweet_containers
     
-    def get_tweet_data(self, tweet: WebElement) -> Tweet:
+    def get_tweet_data(self, username: str, tweet: WebElement) -> Tweet:
         # Tweet text
         try:
             text_container = tweet.find_element(By.XPATH, ".//div[@data-testid='tweetText']")
@@ -56,6 +57,7 @@ class Twitter(Scraper):
             views_count = -1
 
         return Tweet(
+            username="@"+username,
             text=tweet_text,
             time=datetime,
             comments=comments_count,
@@ -70,14 +72,14 @@ class Twitter(Scraper):
         count = aria.split(" ")[0]
         return int(count)
     
-    def scrape_profile_tweets(self, username) -> List[Tweet]:
+    def scrape_profile_tweets(self, username: str) -> List[Tweet]:
         self.load_site('https://x.com/' + str.lower(username))
         tweets = self.get_tweets()
         print(f"Found {len(tweets)} tweets.")
 
         data = []
         for tweet in tweets:
-            tweet_data = self.get_tweet_data(tweet)
+            tweet_data = self.get_tweet_data(username, tweet)
             data.append(tweet_data)
 
         return data

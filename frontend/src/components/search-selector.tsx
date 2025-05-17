@@ -75,9 +75,9 @@ export function SearchSelector({
                     <CommandList>
                         <CommandEmpty>No options found.</CommandEmpty>
                         <CommandGroup>
-                            {options.map((option) => (
+                            {options.map((option, idx) => (
                                 <CommandItem
-                                    key={option.value}
+                                    key={idx}
                                     value={option.value}
                                     onSelect={(currentValue) => {
                                         setState(

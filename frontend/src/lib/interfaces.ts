@@ -14,6 +14,7 @@ export interface Person {
 }
 
 export interface Post {
+    username: string;
     text: string;
     time: string;
     comments: number;

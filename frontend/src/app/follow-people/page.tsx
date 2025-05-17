@@ -3,7 +3,7 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { FollowDialog } from "@/components/follow-dialog";
 import PersonCard from "@/components/person-card";
-import { usePeople } from "@/hooks/use-people";
+import { usePeople } from "@/contexts/people-context";
 
 export default function FollowPeople() {
     const { people } = usePeople();

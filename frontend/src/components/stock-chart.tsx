@@ -140,7 +140,7 @@ export default function StockChart({
                     position: "aboveBar" as SeriesMarkerBarPosition,
                     color: isDark() ? "white" : "black",
                     shape: "arrowDown" as SeriesMarkerShape,
-                    text: "Trump said some stupid shit here.",
+                    text: "Tweet here.",
                     price: 0,
                 },
             ]);

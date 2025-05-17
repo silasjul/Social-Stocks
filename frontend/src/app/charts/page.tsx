@@ -7,35 +7,45 @@ import StockChart from "@/components/stock-chart";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useEffect, useState } from "react";
-import { dummyPeople, dummyPosts } from "@/lib/dummy-data";
 import { defaultSymbols, timeFrames } from "@/lib/configs";
 import { Person, Post } from "@/lib/interfaces";
 import TimeFrameButton from "@/components/timeframe-btn";
+import { usePeople } from "@/contexts/people-context";
+import { usePosts } from "@/contexts/post-context";
+
+function postsByPerson(person: Person, posts: Post[]) {
+    return posts.filter((post) => person.username == post.username);
+}
 
 export default function Charts() {
     const [symbol, setSymbol] = useState("");
     const [person, setPerson] = useState("");
     const [selectedPerson, setSelectedPerson] = useState<Person>();
-    const [posts, setPosts] = useState<Post[]>([]);
     const [hoveredPost, setHoveredPost] = useState<Post>();
     const [timeFrame, setTimeFrame] = useState(timeFrames[0]);
+    const { people } = usePeople();
+    const { filteredPosts, scrapePosts } = usePosts();
 
     useEffect(() => {
-        setPosts(dummyPosts);
-        setSelectedPerson(
-            dummyPeople.find((p) => p.username.slice(1) == person)
-        );
+        setSelectedPerson(people.find((p) => p.username.slice(1) == person));
     }, [person]);
+
+    useEffect(() => {
+        if (selectedPerson) {
+            console.log(filteredPosts.length);
+            scrapePosts(selectedPerson.username);
+        }
+    }, [selectedPerson]);
 
     return (
         <AppSidebar activepage="Charts" includeHeader={false}>
-            <header className="sticky top-0 flex h-16 shrink-0 items-center gap-2 z-10">
+            <header className="sticky top-0 flex h-16 shrink-0 items-center gap-2 z-20">
                 <div className="flex items-center gap-2 px-4">
                     <SidebarTrigger className="-ml-1" />
                 </div>
                 <div className="flex gap-4">
                     <SearchSelector
-                        options={dummyPeople.map((p) => ({
+                        options={people.map((p) => ({
                             value: p.username.slice(1),
                             img: p.img_url,
                         }))}
@@ -91,18 +101,23 @@ export default function Charts() {
                         </div>
                     )}
                 </section>
-                <section className="absolute flex gap-4 z-10 mr-4">
-                    {person &&
-                        posts.map((post, idx) => {
-                            if (selectedPerson)
-                                return (
-                                    <PostCard
-                                        key={idx}
-                                        post={post}
-                                        person={selectedPerson}
-                                        onHover={setHoveredPost}
-                                    />
-                                );
+                <section className="absolute flex flex-col gap-4 z-10 mr-16 pb-4">
+                    {selectedPerson &&
+                        (symbol
+                            ? postsByPerson(
+                                  selectedPerson,
+                                  filteredPosts
+                              ).slice(0, 1)
+                            : postsByPerson(selectedPerson, filteredPosts)
+                        ).map((post, idx) => {
+                            return (
+                                <PostCard
+                                    key={idx}
+                                    post={post}
+                                    person={selectedPerson}
+                                    onHover={setHoveredPost}
+                                />
+                            );
                         })}
                 </section>
             </div>

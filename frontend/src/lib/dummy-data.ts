@@ -21,6 +21,7 @@ const dummyPeople: Person[] = [
 ];
 const dummyPosts: Post[] = [
     {
+        username: "@realDonaldTrump",
         text: "This was so wonderful, 9 years ago today!",
         time: "2025-05-05T15:54:40.000Z",
         comments: 15790,
@@ -29,6 +30,7 @@ const dummyPosts: Post[] = [
         views: 66043801,
     },
     {
+        username: "@realDonaldTrump",
         text: "Democratic Rep. Jasmine Crockett accused of ‘abusing her power’ at airport after she cut passengers in wheelchairs https://trib.al/Dscc1R8",
         time: "2025-05-06T18:27:37.000Z",
         comments: 2276,

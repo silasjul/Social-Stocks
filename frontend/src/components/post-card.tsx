@@ -1,5 +1,13 @@
 import { Person, Post } from "@/lib/interfaces";
+import { Eye, Heart, MessageCircle, Repeat } from "lucide-react";
 import Image from "next/image";
+
+function formatNumber(num: number) {
+    if (num >= 1_000_000)
+        return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+    if (num >= 1_000) return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+    return num.toString();
+}
 
 export default function PostCard({
     post,
@@ -31,13 +39,33 @@ export default function PostCard({
                 </div>
                 <div>
                     <div className="flex gap-1 items-center">
-                        <p className="font-bold">{person.name}</p>
+                        <p className="font-bold">{person.profile_name}</p>
                         <div className="flex gap-1 justify-center text-sm opacity-80">
                             <p>{person.username}</p>
                             <p>{dateStr}</p>
                         </div>
                     </div>
                     <p>{post.text}</p>
+                    <div className="flex gap-4 text-sm mt-1">
+                        <div className="flex items-center gap-0.5">
+                            <Heart size={17} />
+                            {formatNumber(post.likes)}
+                        </div>
+                        <div className="flex items-center gap-0.5">
+                            <MessageCircle size={17} />
+                            {formatNumber(post.comments)}
+                        </div>
+                        <div className="flex items-center gap-0.5">
+                            <Repeat size={17} />
+                            {formatNumber(post.retweets)}
+                        </div>
+                        {post.views > 0 && (
+                            <div className="flex items-center gap-0.5">
+                                <Eye size={17} />
+                                {formatNumber(post.views)}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

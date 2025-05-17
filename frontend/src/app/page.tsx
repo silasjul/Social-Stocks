@@ -4,14 +4,24 @@ import { AppSidebar } from "@/components/app-sidebar";
 import PostCard from "@/components/post-card";
 import QuoteCard from "@/components/quote-card";
 import StockChart from "@/components/stock-chart";
+import { usePosts } from "@/contexts/post-context";
 import { useFAANG } from "@/hooks/use-api";
-import { dummyPeople, dummyPosts } from "@/lib/dummy-data";
+import { dummyPeople } from "@/lib/dummy-data";
+import { Post } from "@/lib/interfaces";
 import Image from "next/image";
 import { useState } from "react";
 
 export default function Page() {
     const [symbol, setSymbol] = useState("");
     const faangData = useFAANG(120); // arg: Seconds between each fetch
+    const { filteredPosts } = usePosts();
+
+    const recentTweets = (posts: Post[]) => {
+        const personTweets = posts.filter((p) => {
+            return p.username == dummyPeople[1].username;
+        });
+        return personTweets.splice(0, 2);
+    };
 
     return (
         <>
@@ -33,13 +43,15 @@ export default function Page() {
                                     Recent tweets
                                 </h3>
                                 <div className="flex flex-col gap-4 mb-4">
-                                    {dummyPosts.map((p, idx) => (
-                                        <PostCard
-                                            key={idx}
-                                            post={p}
-                                            person={dummyPeople[1]}
-                                        />
-                                    ))}
+                                    {recentTweets(filteredPosts).map(
+                                        (p, idx) => (
+                                            <PostCard
+                                                key={idx}
+                                                post={p}
+                                                person={dummyPeople[1]}
+                                            />
+                                        )
+                                    )}
                                 </div>
                             </div>
                             <div className="flex flex-col flex-grow mt-1">

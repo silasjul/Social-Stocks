@@ -2,7 +2,7 @@ import { Person } from "@/lib/interfaces";
 import Image from "next/image";
 import React from "react";
 import { Button } from "./ui/button";
-import { usePeople } from "@/hooks/use-people";
+import { usePeople } from "@/contexts/people-context";
 
 export default function PersonCard({ person }: { person: Person }) {
     const { deletePerson } = usePeople();

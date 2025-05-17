@@ -2,7 +2,7 @@
 
 import { dummyPeople } from "@/lib/dummy-data";
 import { Person } from "@/lib/interfaces";
-import React, { createContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface PeopleProviderProps {
     people: Person[];
@@ -21,7 +21,7 @@ export default function PeopleProvider({
 }: {
     children: React.ReactNode;
 }) {
-    const [people, setPeople] = useState<Person[]>(dummyPeople);
+    const [people, setPeople] = useState<Person[]>([...dummyPeople]);
 
     const addPerson = (person: Person) => {
         setPeople([...people, person]);
@@ -36,4 +36,9 @@ export default function PeopleProvider({
             {children}
         </PeopleContext.Provider>
     );
+}
+
+export function usePeople() {
+    const { people, addPerson, deletePerson } = useContext(PeopleContext);
+    return { people, addPerson, deletePerson };
 }

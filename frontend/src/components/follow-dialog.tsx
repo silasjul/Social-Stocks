@@ -20,7 +20,7 @@ import { PlusIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { z } from "zod";
-import { usePeople } from "@/hooks/use-people";
+import { usePeople } from "@/contexts/people-context";
 
 const twitterUsernameSchema = z
     .string()
@@ -33,7 +33,7 @@ const twitterUsernameSchema = z
 export function FollowDialog() {
     const [username, setUsername] = useState("");
     const [searchValidation, setSearchValidation] = useState("");
-    const { isLoading, error, setError, searchProfile } = useXProfileScraper();
+    const { isLoading, error, searchProfile } = useXProfileScraper();
     const { people, addPerson } = usePeople();
 
     const handleSubmit = async () => {
@@ -47,9 +47,12 @@ export function FollowDialog() {
 
         // Check if you already follow the person
         for (const person of people) {
-            if (username == person.username) {
+            if (
+                username.toLocaleLowerCase() ===
+                person.username.toLocaleLowerCase()
+            ) {
                 console.log("already followed");
-                setError("You already follow this person.");
+                setSearchValidation("You already follow this person.");
                 return;
             }
         }
@@ -57,6 +60,7 @@ export function FollowDialog() {
         // Search for a profile
         const person_data = await searchProfile(username.slice(1)); // removes @
         if (person_data) addPerson(person_data);
+        setUsername("");
     };
 
     // Searching animation
@@ -130,9 +134,7 @@ export function FollowDialog() {
                     )}
                     {error && (
                         <p className="text-red-500 text-sm mt-0.5">
-                            {error.response?.data?.detail ||
-                                error?.message ||
-                                error}
+                            {error.response?.data?.detail || error?.message}
                         </p>
                     )}
                 </div>
@@ -143,7 +145,7 @@ export function FollowDialog() {
                         onClick={handleSubmit}
                         disabled={isLoading}
                     >
-                        Start search
+                        {isLoading ? "Searching..." : "Start search"}
                     </Button>
                 </DialogFooter>
             </DialogContent>

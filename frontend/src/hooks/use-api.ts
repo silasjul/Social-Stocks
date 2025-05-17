@@ -185,5 +185,5 @@ export function useXProfileScraper() {
         }
     }, []);
 
-    return { isLoading, error, setError, searchProfile };
+    return { isLoading, error, searchProfile };
 }

@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/sidebar/theme-provider";
 import PeopleProvider from "@/contexts/people-context";
+import PostProvider from "@/contexts/post-context";
 
 const geist = Geist({
     variable: "--font-geist",
@@ -28,7 +29,9 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <PeopleProvider>{children}</PeopleProvider>
+                    <PeopleProvider>
+                        <PostProvider>{children}</PostProvider>
+                    </PeopleProvider>
                 </ThemeProvider>
             </body>
         </html>
