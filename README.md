@@ -14,8 +14,6 @@ Stock market data and social media sentiment
 
 </div>
 
-TradeSocial is a web application designed for traders, providing insights into potential market movements by analyzing tweets from influential figures alongside traditional stock data.
-
 ## Description
 
 The core idea behind TradeSocial is to leverage social media sentiment, to gauge potential impacts on the stock market. Tweets are scraped from selected influential figures and presented alongside relevant stock data to help traders make more informed decisions.
