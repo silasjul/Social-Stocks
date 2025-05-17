@@ -42,7 +42,7 @@ export default function Page() {
                                     ))}
                                 </div>
                             </div>
-                            <div className="flex flex-col flex-grow">
+                            <div className="flex flex-col flex-grow mt-1">
                                 <div className="flex gap-2 items-center">
                                     <h3 className="mb-2 scroll-m-20 text-xl font-semibold tracking-tight">
                                         Chart
@@ -57,12 +57,12 @@ export default function Page() {
                                                 }
                                             >
                                                 <Image
-                                                    className={`rounded-full duration-200 active:scale-150 hover:scale-110 ${
+                                                    className={`rounded-full duration-200 active:scale-125 hover:scale-110 ${
                                                         f.symbol == symbol &&
                                                         "border border-blue-500"
                                                     }`}
-                                                    width={22}
-                                                    height={22}
+                                                    width={26}
+                                                    height={26}
                                                     src={`/logos/${f.symbol}.svg`}
                                                     alt={"logo"}
                                                 />

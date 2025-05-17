@@ -18,7 +18,6 @@ class Scraper:
     def load_site(self, url: str):
         try:
             self.driver.get(url)
-            WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, self.tag)))
             time.sleep(5)
             return True
         except Exception as e:

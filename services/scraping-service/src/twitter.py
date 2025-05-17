@@ -1,9 +1,19 @@
+import time
 from typing import List
 from src.scraper import Scraper
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException
 from pydantic import BaseModel
+
+class Profile(BaseModel):
+    profile_name: str
+    username: str
+    description_text: str
+    img_url: str
+
+    def __str__(self):
+        return f"Profile: {self.profile_name}, Username: {self.username}, Description: {self.description_text}, img_url: {self.img_url}"
 
 class Tweet(BaseModel):
     text: str
@@ -19,7 +29,6 @@ class Tweet(BaseModel):
 class Twitter(Scraper):
     def __init__(self):
         super().__init__()
-        self.tag = 'main'
 
     def get_tweets(self) -> List[WebElement]:
         tweet_containers = self.driver.find_elements(By.XPATH, "//article[@data-testid='tweet']")
@@ -61,7 +70,7 @@ class Twitter(Scraper):
         count = aria.split(" ")[0]
         return int(count)
     
-    def scrape_profile(self, username) -> List[Tweet]:
+    def scrape_profile_tweets(self, username) -> List[Tweet]:
         self.load_site('https://x.com/' + str.lower(username))
         tweets = self.get_tweets()
         print(f"Found {len(tweets)} tweets.")
@@ -73,17 +82,48 @@ class Twitter(Scraper):
 
         return data
     
+    def scrape_profile(self, username) -> Profile:
+        self.load_site('https://x.com/' + str.lower(username))
+
+        # Profile name
+        container = self.driver.find_element(By.XPATH, '//div[@data-testid="UserName"]')
+        profile_name = container.find_element(By.XPATH, './/span/span')
+
+        # Username
+        username = container.find_element(By.XPATH, './/span[starts-with(text(), "@")]')
+
+        # Description
+        description_text = ""
+        try:
+            description = self.driver.find_element(By.XPATH, '//div[@data-testid="UserDescription"]')
+            description_text = description.text
+        except NoSuchElementException as e:
+            pass # Having a profile description is not mandatory
+
+        # Image
+        # 1. click image element
+        container = self.driver.find_element(By.XPATH, '//div[contains(@data-testid, "UserAvatar-Container")]')
+        container.click()
+        time.sleep(1)
+        # 2. grab img url
+        container = self.driver.find_element(By.XPATH, "//div[@aria-label='Image']")
+        img = container.find_element(By.XPATH, ".//img")
+
+        return Profile(
+            profile_name=profile_name.text, 
+            username=username.text, 
+            description_text=description_text, 
+            img_url=img.get_attribute("src")
+        )
+
     def close(self):
         self.driver.quit()
 
 
 if __name__ == '__main__':
-    tw = Twitter('main')
+    tw = Twitter()
 
-    # Example scraping Trumps profile
-    data = tw.scrape_profile(username='realDonaldTrump')
-    for idx, tweet_data in enumerate(data):
-        print(f"Tweet ID: {idx}")
-        print(str(tweet_data))
-    
+    res = tw.scrape_profile("elonmusk")
+    print(res)
+
     tw.close()

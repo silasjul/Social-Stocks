@@ -37,7 +37,7 @@ export default function Charts() {
                     <SearchSelector
                         options={dummyPeople.map((p) => ({
                             value: p.username.slice(1),
-                            img: p.img,
+                            img: p.img_url,
                         }))}
                         category={"Person"}
                         state={person}

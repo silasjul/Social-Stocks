@@ -25,7 +25,7 @@ export default function PostCard({
                         className="min-w-[35px] min-h-[35px] rounded-full"
                         width={35}
                         height={35}
-                        src={person.img}
+                        src={person.img_url}
                         alt={"profile_image"}
                     />
                 </div>

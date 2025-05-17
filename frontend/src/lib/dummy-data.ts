@@ -4,14 +4,19 @@ import { Person, Post } from "./interfaces";
 
 const dummyPeople: Person[] = [
     {
-        name: "gorklon rust",
+        profile_name: "Kekius Maximus",
         username: "@elonmusk",
-        img: "https://pbs.twimg.com/profile_images/1919097976594837506/5JJEissI_400x400.jpg",
+        description_text: "",
+        img_url:
+            "https://pbs.twimg.com/profile_images/1923451603740168192/bBoBROAs_400x400.jpg",
     },
     {
-        name: "Donald J. Trump",
+        profile_name: "Donald J. Trump",
         username: "@realDonaldTrump",
-        img: "https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg",
+        description_text:
+            "45th & 47th President of the United States of America",
+        img_url:
+            "https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg",
     },
 ];
 const dummyPosts: Post[] = [

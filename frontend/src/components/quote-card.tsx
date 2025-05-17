@@ -28,7 +28,7 @@ export default function QuoteCard({ quote }: { quote: FaangQuote }) {
         return <Skeleton className="w-[203px] h-[80px] rounded-lg" />;
     } else if (error) {
         return (
-            <div className="w-[200px] h-[80px] rounded-lg flex items-center justify-center">
+            <div className="w-[200px] h-[80px] border rounded-lg flex items-center justify-center">
                 <p>Error.</p>
             </div>
         );
