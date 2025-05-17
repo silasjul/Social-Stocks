@@ -18,7 +18,7 @@ TradeSocial is a web application designed for traders, providing insights into p
 
 ## Description
 
-The core idea behind TradeSocial is to leverage social media sentiment, to gauge potential impacts on the stock market. We scrape tweets from selected influential individuals, analyze them to determine their potential market influence, and present this information alongside relevant stock data to help traders make more informed decisions.
+The core idea behind TradeSocial is to leverage social media sentiment, to gauge potential impacts on the stock market. Tweets are scraped from selected influential figures and presented alongside relevant stock data to help traders make more informed decisions.
 
 ## Tech Stack
 
