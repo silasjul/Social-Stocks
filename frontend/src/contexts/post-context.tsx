@@ -47,7 +47,7 @@ export default function PostProvider({
             for (const post of filteredPosts) {
                 if (post.time == old_posts.time) return false;
             }
-
+            
             return true;
         });
     };

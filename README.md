@@ -26,7 +26,7 @@ This project utilizes a combination of modern web technologies:
 
 -   **Frontend:** [Next.js](https://nextjs.org/) (React Framework)
 -   **Backend/Scraping/Analysis:** [Python](https://www.python.org/) (using FastAPI, BeautifulSoup for scraping and gemini for tweet analysing)
--   **Database:** [MySQL](https://www.mysql.com/)
+-   **Database:** [Postgres](https://www.postgresql.org/)
 -   **Containerization:** [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
 
 ## Features

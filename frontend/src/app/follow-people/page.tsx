@@ -10,7 +10,7 @@ export default function FollowPeople() {
 
     return (
         <AppSidebar activepage="People">
-            <div className="flex-col mx-16 my-6">
+            <div className="mx-18 my-6">
                 <header>
                     <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                         People

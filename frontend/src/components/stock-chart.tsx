@@ -151,7 +151,7 @@ export default function StockChart({
         volumeSeries.setData(volumeData);
 
         // --- Updates from socket
-        if (updateData) {
+        /* if (updateData) {
             const last = candleData[candleData.length - 1];
             const current = updateData.p;
             candleSeries.update({
@@ -161,7 +161,7 @@ export default function StockChart({
                 close: last.close > current ? current : last.open,
                 low: last.low > current ? current : last.open,
             });
-        }
+        } */
 
         // --- Resize the canvas on window resize
         const handleResize = () => {
