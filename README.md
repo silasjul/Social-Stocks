@@ -22,9 +22,9 @@ The core idea behind TradeSocial is to leverage social media sentiment, to gauge
 
 This project utilizes a combination of modern web technologies:
 
--   **Frontend:** [Next.js](https://nextjs.org/) (React Framework)
--   **Backend/Scraping/Analysis:** [Python](https://www.python.org/) (using FastAPI and Selenium for scraping)
--   **Database:** [Postgres](https://www.postgresql.org/)
+-   **Frontend:** [Next.js](https://nextjs.org/) React Framework
+-   **Scraping:** [Python](https://www.python.org/) using FastAPI and Selenium
+-   **Database:** [Postgres](https://www.postgresql.org/) using [Golang](https://go.dev/)
 -   **Containerization:** [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
 
 ## Features
