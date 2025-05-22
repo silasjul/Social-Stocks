@@ -14,24 +14,21 @@ Stock market data and social media sentiment
 
 </div>
 
-TradeSocial is a web application designed for traders, providing insights into potential market movements by analyzing tweets from influential figures alongside traditional stock data.
-
 ## Description
 
-The core idea behind TradeSocial is to leverage social media sentiment, to gauge potential impacts on the stock market. We scrape tweets from selected influential individuals, analyze them to determine their potential market influence, and present this information alongside relevant stock data to help traders make more informed decisions.
+The core idea behind TradeSocial is to leverage social media sentiment, to gauge potential impacts on the stock market. Tweets are scraped from selected influential figures and presented alongside relevant stock data to help traders make more informed decisions.
 
 ## Tech Stack
 
 This project utilizes a combination of modern web technologies:
 
 -   **Frontend:** [Next.js](https://nextjs.org/) (React Framework)
--   **Backend/Scraping/Analysis:** [Python](https://www.python.org/) (using FastAPI, BeautifulSoup for scraping and gemini for tweet analysing)
+-   **Backend/Scraping/Analysis:** [Python](https://www.python.org/) (using FastAPI and Selenium for scraping)
 -   **Database:** [Postgres](https://www.postgresql.org/)
 -   **Containerization:** [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
 
 ## Features
 
--   **Stock Data Visualization:** View historical and real-time stock data.
--   **Influencer Tweet Feed:** Displays tweets scraped from a curated list of influential people in the finance space.
--   **Tweet Influence Score:** Each relevant tweet is analyzed and assigned a score indicating its potential probability to influence market sentiment or stock prices.
--   **User Accounts:** You can sign-up to save you selected people and stocks for easy use in the future.
+-   **Stock Data Visualization:** View stock data.
+-   **Influencer Tweet Feed:** Displays tweets scraped from the list of people you follow.
+-   **Tweet Markers** Hover over the tweets to see where it was posted on the charts.
