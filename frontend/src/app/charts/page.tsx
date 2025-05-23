@@ -10,11 +10,11 @@ import { useEffect, useState } from "react";
 import { defaultSymbols, timeFrames } from "@/lib/configs";
 import { Person, Post } from "@/lib/interfaces";
 import TimeFrameButton from "@/components/timeframe-btn";
-import { usePeople } from "@/contexts/people-context";
-import { usePosts } from "@/contexts/post-context";
+import { usePeople } from "@/hooks/use-people";
+import { usePosts } from "@/hooks/use-posts";
 
 function postsByPerson(person: Person, posts: Post[]) {
-    return posts.filter((post) => person.username == post.username);
+    return posts.filter((post) => person.id == post.personId);
 }
 
 export default function Charts() {
@@ -24,18 +24,12 @@ export default function Charts() {
     const [hoveredPost, setHoveredPost] = useState<Post>();
     const [timeFrame, setTimeFrame] = useState(timeFrames[0]);
     const { people } = usePeople();
-    const { filteredPosts, scrapePosts } = usePosts();
+    const { posts, fetchPosts } = usePosts();
 
     useEffect(() => {
         setSelectedPerson(people.find((p) => p.username.slice(1) == person));
+        fetchPosts();
     }, [person]);
-
-    useEffect(() => {
-        if (selectedPerson) {
-            console.log(filteredPosts.length);
-            scrapePosts(selectedPerson.username);
-        }
-    }, [selectedPerson]);
 
     return (
         <AppSidebar activepage="Charts" includeHeader={false}>
@@ -47,7 +41,7 @@ export default function Charts() {
                     <SearchSelector
                         options={people.map((p) => ({
                             value: p.username.slice(1),
-                            img: p.img_url,
+                            img: p.imgUrl,
                         }))}
                         category={"Person"}
                         state={person}
@@ -104,21 +98,16 @@ export default function Charts() {
                 <section className="absolute flex flex-col gap-4 z-10 mr-16 pb-4">
                     {selectedPerson &&
                         (symbol
-                            ? postsByPerson(
-                                  selectedPerson,
-                                  filteredPosts
-                              ).slice(0, 1)
-                            : postsByPerson(selectedPerson, filteredPosts)
-                        ).map((post, idx) => {
-                            return (
-                                <PostCard
-                                    key={idx}
-                                    post={post}
-                                    person={selectedPerson}
-                                    onHover={setHoveredPost}
-                                />
-                            );
-                        })}
+                            ? postsByPerson(selectedPerson, posts).slice(0, 1)
+                            : postsByPerson(selectedPerson, posts)
+                        ).map((post, idx) => (
+                            <PostCard
+                                key={idx}
+                                post={post}
+                                person={selectedPerson}
+                                onHover={setHoveredPost}
+                            />
+                        ))}
                 </section>
             </div>
         </AppSidebar>

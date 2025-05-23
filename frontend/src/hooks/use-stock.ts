@@ -1,10 +1,9 @@
 import { faang } from "@/lib/configs";
 import { CompanyProfile, Quote, SymbolData } from "@/lib/stock-data/finnhub";
-import { PeopleContext } from "@/contexts/people-context";
 import { BarData, Timespan } from "@/lib/stock-data/polygon";
 import axios from "axios";
 import { UTCTimestamp } from "lightweight-charts";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useSWR from "swr";
 import { Person } from "@/lib/interfaces";
 
@@ -163,27 +162,4 @@ export function useCompanyProfile(symbol: string) {
         isLoading: res.isLoading,
         error: res.error,
     };
-}
-
-export function useXProfileScraper() {
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<any>(null);
-
-    const searchProfile = useCallback(async (username: string) => {
-        setIsLoading(true);
-        setError(null);
-        try {
-            const data = await axiosGet(
-                `http://localhost:8000/twitter/profile/${username}`
-            );
-            console.log(data);
-            return data as Person;
-        } catch (err: any) {
-            setError(err);
-        } finally {
-            setIsLoading(false);
-        }
-    }, []);
-
-    return { isLoading, error, searchProfile };
 }

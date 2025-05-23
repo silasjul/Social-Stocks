@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 
 	_ "github.com/lib/pq"
 	"github.com/silasjul/TradeSocial/services/scraping-data-service/internal/models"
@@ -42,8 +43,8 @@ func InitTables(db *sql.DB) error {
 	CREATE TABLE IF NOT EXISTS posts (
         id SERIAL PRIMARY KEY,
         person_id INTEGER NOT NULL,
-        post_text TEXT NOT NULL,
-        time_unix BIGINT UNIQUE NOT NULL,
+        text TEXT NOT NULL,
+        time TIMESTAMP UNIQUE NOT NULL,
         comments BIGINT DEFAULT -1,
         retweets BIGINT DEFAULT -1,
         likes BIGINT DEFAULT -1,
@@ -91,12 +92,12 @@ func AddPerson(db *sql.DB, profileName string, username string, description stri
 	return nil
 }
 
-func AddPost(db *sql.DB, personID int, text string, timeUnix int64, comments int, retweets int, likes int, views int ) error {
+func AddPost(db *sql.DB, personID int, text string, time time.Time, comments int, retweets int, likes int, views int ) error {
 	addPostSQL := `
-		INSERT INTO posts (person_id, post_text, time_unix, comments, retweets, likes, views)
+		INSERT INTO posts (person_id, text, time, comments, retweets, likes, views)
 		VALUES ($1, $2, $3, $4, $5, $6, $7)
 	`
-	_, err := db.Exec(addPostSQL, personID, text, timeUnix, comments, retweets, likes, views)
+	_, err := db.Exec(addPostSQL, personID, text, time, comments, retweets, likes, views)
 	if err != nil {
 		log.Printf("error inserting post '%s': %v", text, err)
 		return fmt.Errorf("error inserting post '%s': %v", text, err)
@@ -113,8 +114,8 @@ func GetAllPosts(db *sql.DB) ([]models.Post, error) {
 		SELECT /* By not using * to select we insure the values are in this order */
 			id,
             person_id,
-            post_text, 
-            time_unix,
+            text, 
+            time,
             views,
             comments,
             likes,
@@ -131,7 +132,7 @@ func GetAllPosts(db *sql.DB) ([]models.Post, error) {
 			&post.ID,
 			&post.PersonID,
 			&post.Text,
-			&post.TimeUnix,
+			&post.Time,
 			&post.Views,
 			&post.Comments,
 			&post.Likes,
@@ -150,8 +151,8 @@ func GetPostsByUsername(db *sql.DB, personID int) ([]models.Post, error) {
 		SELECT /* By not using * to select we insure the values are in this order */
 			id,
             person_id,
-            post_text, 
-            time_unix,
+            text, 
+            time,
             views,
             comments,
             likes,
@@ -168,7 +169,7 @@ func GetPostsByUsername(db *sql.DB, personID int) ([]models.Post, error) {
 			&post.ID,
 			&post.PersonID,
 			&post.Text,
-			&post.TimeUnix,
+			&post.Time,
 			&post.Views,
 			&post.Comments,
 			&post.Likes,
@@ -231,7 +232,7 @@ func Test() {
 	if err = AddPerson(db, "Naughty boy", "@boii", "I am a naughty boy", "https://picture.com"); err != nil {
 		log.Fatal(err)
 	}
-	if err = AddPost(db, 1, "IM A NAGHTY BOY awksjldhkaljwghdkljaghwlkdegalkwjgdkljawgdkjagwlkdjg", 1292993939423, 10000, 1000, 102031, 100000000); err != nil {
+	if err = AddPost(db, 1, "IM A NAGHTY BOY awksjldhkaljwghdkljaghwlkdegalkwjgdkljawgdkjagwlkdjg", time.Now(), 10000, 1000, 102031, 100000000); err != nil {
 		log.Fatal(err)
 	}
 

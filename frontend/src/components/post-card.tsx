@@ -33,13 +33,13 @@ export default function PostCard({
                         className="min-w-[35px] min-h-[35px] rounded-full"
                         width={35}
                         height={35}
-                        src={person.img_url}
+                        src={person.imgUrl}
                         alt={"profile_image"}
                     />
                 </div>
                 <div>
                     <div className="flex gap-1 items-center">
-                        <p className="font-bold">{person.profile_name}</p>
+                        <p className="font-bold">{person.profileName}</p>
                         <div className="flex gap-1 justify-center text-sm opacity-80">
                             <p>{person.username}</p>
                             <p>{dateStr}</p>

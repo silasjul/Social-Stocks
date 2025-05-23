@@ -7,13 +7,15 @@ export interface TimeFrame {
 }
 
 export interface Person {
-    profile_name: string;
-    description_text?: string;
+    id: number;
+    profileName: string;
+    description?: string;
     username: string;
-    img_url: string;
+    imgUrl: string;
 }
 
 export interface Post {
+    personId: number;
     username: string;
     text: string;
     time: string;

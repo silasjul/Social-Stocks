@@ -15,12 +15,12 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useXProfileScraper } from "@/hooks/use-api";
 import { PlusIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { z } from "zod";
-import { usePeople } from "@/contexts/people-context";
+import { Person } from "@/lib/interfaces";
+import { useScraper } from "@/hooks/use-scraper";
 
 const twitterUsernameSchema = z
     .string()
@@ -30,11 +30,16 @@ const twitterUsernameSchema = z
             "Username can only contain letters, numbers, underscores and starts with @.",
     });
 
-export function FollowDialog() {
+export function FollowDialog({
+    people,
+    addPerson,
+}: {
+    people: Person[];
+    addPerson: (person: Person) => void;
+}) {
     const [username, setUsername] = useState("");
     const [searchValidation, setSearchValidation] = useState("");
-    const { isLoading, error, searchProfile } = useXProfileScraper();
-    const { people, addPerson } = usePeople();
+    const { isLoading, error, scrapeProfile } = useScraper();
 
     const handleSubmit = async () => {
         // Validate input
@@ -58,7 +63,7 @@ export function FollowDialog() {
         }
 
         // Search for a profile
-        const person_data = await searchProfile(username.slice(1)); // removes @
+        const person_data = await scrapeProfile(username.slice(1)); // removes @
         if (person_data) addPerson(person_data);
         setUsername("");
     };

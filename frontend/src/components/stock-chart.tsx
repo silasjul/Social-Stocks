@@ -1,6 +1,6 @@
 "use client";
 
-import { useOHCL, useTrades } from "@/hooks/use-api";
+import { useOHCL, useTrades } from "@/hooks/use-stock";
 import { Timespan } from "@/lib/stock-data/polygon";
 import {
     CandlestickSeries,

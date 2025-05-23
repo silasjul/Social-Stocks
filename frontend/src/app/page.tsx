@@ -4,8 +4,9 @@ import { AppSidebar } from "@/components/app-sidebar";
 import PostCard from "@/components/post-card";
 import QuoteCard from "@/components/quote-card";
 import StockChart from "@/components/stock-chart";
-import { usePosts } from "@/contexts/post-context";
-import { useFAANG } from "@/hooks/use-api";
+import { usePeople } from "@/hooks/use-people";
+import { usePosts } from "@/hooks/use-posts";
+import { useFAANG } from "@/hooks/use-stock";
 import { dummyPeople } from "@/lib/dummy-data";
 import { Post } from "@/lib/interfaces";
 import Image from "next/image";
@@ -14,14 +15,7 @@ import { useState } from "react";
 export default function Page() {
     const [symbol, setSymbol] = useState("");
     const faangData = useFAANG(120); // arg: Seconds between each fetch
-    const { filteredPosts } = usePosts();
-
-    const recentTweets = (posts: Post[]) => {
-        const personTweets = posts.filter((p) => {
-            return p.username == dummyPeople[1].username;
-        });
-        return personTweets.splice(0, 2);
-    };
+    const { posts } = usePosts();
 
     return (
         <>
@@ -42,15 +36,22 @@ export default function Page() {
                                 <h3 className="mb-2 scroll-m-20 text-xl font-semibold tracking-tight">
                                     Recent tweets
                                 </h3>
-                                <div className="flex flex-col gap-4 mb-4">
-                                    {recentTweets(filteredPosts).map(
-                                        (p, idx) => (
-                                            <PostCard
-                                                key={idx}
-                                                post={p}
-                                                person={dummyPeople[1]}
-                                            />
-                                        )
+                                <div className="flex flex-col gap-4 mb-4 min-w-[50vw]">
+                                    {posts.length > 0 ? (
+                                        posts
+                                            .slice(0, 2)
+                                            .map((p, idx) => (
+                                                <PostCard
+                                                    key={idx}
+                                                    post={p}
+                                                    person={dummyPeople[1]}
+                                                />
+                                            ))
+                                    ) : (
+                                        <p className="text-muted-foreground">
+                                            No tweets found. Go subscribe to
+                                            some people in the 'people' tab.
+                                        </p>
                                     )}
                                 </div>
                             </div>

@@ -1,4 +1,4 @@
-import { FaangQuote, useCompanyProfile } from "@/hooks/use-api";
+import { FaangQuote, useCompanyProfile } from "@/hooks/use-stock";
 import { Dot } from "lucide-react";
 import Image from "next/image";
 import React from "react";

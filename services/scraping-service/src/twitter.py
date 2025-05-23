@@ -1,22 +1,26 @@
+import asyncio
 import time
-from typing import List
-from src.scraper import Scraper
+from typing import List, Optional
+import httpx
+from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
 from pydantic import BaseModel
 
 class Profile(BaseModel):
-    profile_name: str
+    id: Optional[int] = None
+    profileName: str
     username: str
-    description_text: str
-    img_url: str
+    description: str
+    imgUrl: str
 
     def __str__(self):
-        return f"Profile: {self.profile_name}, Username: {self.username}, Description: {self.description_text}, img_url: {self.img_url}"
+        return f"Profile: {self.profileName}, Username: {self.username}, Description: {self.description}, img_url: {self.imgUrl}"
 
 class Tweet(BaseModel):
-    username: str
+    personId: int
     text: str
     time: str
     comments: int
@@ -27,15 +31,20 @@ class Tweet(BaseModel):
     def __str__(self):
         return f"Text: '{self.text}', Time: '{self.time}', Comments: '{self.comments}', Retweets: '{self.retweets}', Likes: '{self.likes}', Views: '{self.views}'"
 
-class Twitter(Scraper):
+class Twitter():
     def __init__(self):
-        super().__init__()
+        self.options = Options()
+        self.options.add_experimental_option("excludeSwitches", ["enable-automation"]) # Avoid bot detection
+        self.options.add_experimental_option("useAutomationExtension", False) # Avoid bot detection
+        # self.options.add_argument("--headless")
+
+        self.driver = webdriver.Chrome(options=self.options)
 
     def get_tweets(self) -> List[WebElement]:
         tweet_containers = self.driver.find_elements(By.XPATH, "//article[@data-testid='tweet']")
         return tweet_containers
     
-    def get_tweet_data(self, username: str, tweet: WebElement) -> Tweet:
+    def get_tweet_data(self, personId: int, tweet: WebElement) -> Tweet:
         # Tweet text
         try:
             text_container = tweet.find_element(By.XPATH, ".//div[@data-testid='tweetText']")
@@ -57,7 +66,7 @@ class Twitter(Scraper):
             views_count = -1
 
         return Tweet(
-            username="@"+username,
+            personId=personId,
             text=tweet_text,
             time=datetime,
             comments=comments_count,
@@ -72,14 +81,13 @@ class Twitter(Scraper):
         count = aria.split(" ")[0]
         return int(count)
     
-    def scrape_profile_tweets(self, username: str) -> List[Tweet]:
+    def scrape_profile_tweets(self, username: str, personId: int) -> List[Tweet]:
         self.load_site('https://x.com/' + str.lower(username))
         tweets = self.get_tweets()
-        print(f"Found {len(tweets)} tweets.")
 
         data = []
         for tweet in tweets:
-            tweet_data = self.get_tweet_data(username, tweet)
+            tweet_data = self.get_tweet_data(personId, tweet)
             data.append(tweet_data)
 
         return data
@@ -112,20 +120,68 @@ class Twitter(Scraper):
         img = container.find_element(By.XPATH, ".//img")
 
         return Profile(
-            profile_name=profile_name.text, 
+            profileName=profile_name.text, 
             username=username.text, 
-            description_text=description_text, 
-            img_url=img.get_attribute("src")
+            description=description_text, 
+            imgUrl=img.get_attribute("src")
         )
+    
+    def load_site(self, url: str):
+        try:
+            self.driver.get(url)
+            time.sleep(5)
+            return True
+        except Exception as e:
+            print(f"\nError occured trying to fetch html: {e}")
+            return False
 
     def close(self):
         self.driver.quit()
 
+base_url = "http://localhost:8080"
+async def scrape_to_infinity():
+    async with httpx.AsyncClient() as client:
+        while True:
+            # Get all people from data-service
+            try:
+                res = await client.get(f"{base_url}/people")
+                res.raise_for_status()
+            except Exception as e:
+                print(f"Error getting people: {e}")
+
+            # Scrape all tweets
+            for person_data in res.json():
+                person = Profile(**person_data)
+                await scrape(client, person.username, person.id)
+            
+            await asyncio.sleep(60)
+
+async def scrape_user_tweets(username: str):
+    async with httpx.AsyncClient() as client:
+        # Get all people from data-service
+        try:
+            res = await client.get(f"{base_url}/people")
+            res.raise_for_status()
+        except Exception as e:
+            print(f"Error getting people: {e}")
+            return
+
+        await scrape(client, username, len(res.json())+1) # <- dont be a lazy fuck could cause race condition if multiple users add a person at the same time
+            
+async def scrape(client: httpx.AsyncClient, username: str, id: int):
+    # Scrape all tweets
+    tw = Twitter()
+    tweet_data = tw.scrape_profile_tweets(username, id)
+    tw.close()
+
+    # Send tweet to data-service
+    dict_tweets = [tweet.model_dump() for tweet in tweet_data]
+    try:
+        res = await client.post(f"{base_url}/posts", json=dict_tweets)
+        res.raise_for_status()
+    except Exception as e:
+        print(f"Failed to insert scraped tweets: {e}")
 
 if __name__ == '__main__':
-    tw = Twitter()
-
-    res = tw.scrape_profile("elonmusk")
-    print(res)
-
-    tw.close()
+    # testing
+    asyncio.run(scrape_user_tweets("elonmusk"))

@@ -3,10 +3,11 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { FollowDialog } from "@/components/follow-dialog";
 import PersonCard from "@/components/person-card";
-import { usePeople } from "@/contexts/people-context";
+import { Skeleton } from "@/components/ui/skeleton";
+import { usePeople } from "@/hooks/use-people";
 
 export default function FollowPeople() {
-    const { people } = usePeople();
+    const { people, isLoading, error, addPerson, deletePerson } = usePeople();
 
     return (
         <AppSidebar activepage="People">
@@ -20,12 +21,18 @@ export default function FollowPeople() {
                     </p>
                 </header>
                 <div className="mt-8">
-                    <FollowDialog />
-                    <div className="flex flex-wrap gap-4 mt-4">
-                        {people.map((p) => (
-                            <PersonCard key={p.username} person={p} />
-                        ))}
-                    </div>
+                    <FollowDialog people={people} addPerson={addPerson} />
+                    {!isLoading && (
+                        <div className="flex flex-wrap gap-4 mt-4">
+                            {people.map((p) => (
+                                <PersonCard
+                                    key={p.username}
+                                    person={p}
+                                    deletePerson={deletePerson}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </AppSidebar>
