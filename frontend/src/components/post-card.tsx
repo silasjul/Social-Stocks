@@ -15,9 +15,11 @@ export default function PostCard({
     onHover,
 }: {
     post: Post;
-    person: Person;
+    person?: Person;
     onHover?: (arg: Post | undefined) => void;
 }) {
+    if (!person) return;
+
     const date = new Date(post.time);
     const dateStr = date.toString().slice(4, 21); // month day year hour:minute
 

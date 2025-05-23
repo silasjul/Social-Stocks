@@ -16,6 +16,7 @@ export default function Page() {
     const [symbol, setSymbol] = useState("");
     const faangData = useFAANG(120); // arg: Seconds between each fetch
     const { posts } = usePosts();
+    const { people } = usePeople();
 
     return (
         <>
@@ -44,7 +45,11 @@ export default function Page() {
                                                 <PostCard
                                                     key={idx}
                                                     post={p}
-                                                    person={dummyPeople[1]}
+                                                    person={people.find(
+                                                        (person) =>
+                                                            p.personId ==
+                                                            person.id
+                                                    )}
                                                 />
                                             ))
                                     ) : (
