@@ -7,7 +7,6 @@ import StockChart from "@/components/stock-chart";
 import { usePeople } from "@/hooks/use-people";
 import { usePosts } from "@/hooks/use-posts";
 import { useFAANG } from "@/hooks/use-stock";
-import { dummyPeople } from "@/lib/dummy-data";
 import { Post } from "@/lib/interfaces";
 import Image from "next/image";
 import { useState } from "react";

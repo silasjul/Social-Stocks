@@ -4,12 +4,14 @@ import { Person, Post } from "./interfaces";
 
 const dummyPeople: Person[] = [
     {
+        id: 1,
         profileName: "Kekius Maximus",
         username: "@elonmusk",
         description: "",
         imgUrl: "https://pbs.twimg.com/profile_images/1923451603740168192/bBoBROAs_400x400.jpg",
     },
     {
+        id: 2,
         profileName: "Donald J. Trump",
         username: "@realDonaldTrump",
         description: "45th & 47th President of the United States of America",
@@ -18,6 +20,7 @@ const dummyPeople: Person[] = [
 ];
 const dummyPosts: Post[] = [
     {
+        personId: 2,
         username: "@realDonaldTrump",
         text: "This was so wonderful, 9 years ago today!",
         time: "2025-05-05T15:54:40.000Z",
@@ -27,6 +30,7 @@ const dummyPosts: Post[] = [
         views: 66043801,
     },
     {
+        personId: 1,
         username: "@realDonaldTrump",
         text: "Democratic Rep. Jasmine Crockett accused of ‘abusing her power’ at airport after she cut passengers in wheelchairs https://trib.al/Dscc1R8",
         time: "2025-05-06T18:27:37.000Z",
