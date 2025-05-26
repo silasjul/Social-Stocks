@@ -35,12 +35,14 @@ This project utilizes a combination of modern web technologies:
 
 ## Running the Project
 
-To run the project, you will need to have [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) installed.
+To run the project, you will need to have [Docker](https://www.docker.com/) installed.
 
 1.  Clone the repository:
 
     ```bash
-    git clone <repository_url>
+    git clone https://github.com/silasjul/TradeSocial.git
+    ```
+     ```bash
     cd TradeSocial
     ```
 
