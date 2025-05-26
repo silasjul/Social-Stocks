@@ -10,7 +10,6 @@ export default function PersonCard({
     person: Person;
     deletePerson: (person: Person) => void;
 }) {
-    console.log(person.imgUrl);
 
     return (
         <div className="rounded-lg border p-4">

@@ -49,8 +49,8 @@ class Twitter():
         self.options = Options()
         self.options.add_experimental_option("excludeSwitches", ["enable-automation"]) # Real user imitation
         self.options.add_experimental_option("useAutomationExtension", False)
-        self.options.add_argument("--headless=new")
-        self.options.add_argument("--window-size=1920,1080") # Resolution is facked in headless mode and it cant find elements
+        #self.options.add_argument("--headless=new")
+        #self.options.add_argument("--window-size=1920,1080") # Resolution is facked in headless mode and it cant find elements
 
         if (isDocker): # Running from docker
             self.options.add_argument("--no-sandbox") # Needed for docker. MAKES YOUR PC VULNERABLE as attackers are no longer limited by the sandbox configuration and can access your pc
@@ -117,6 +117,7 @@ class Twitter():
         return data
     
     def scrape_profile(self, username) -> Profile:
+        print("Scraping profile: " + username)
         self.load_site('https://x.com/' + str.lower(username))
 
         # Profile name
@@ -216,7 +217,6 @@ async def scrape(client: httpx.AsyncClient, username: str, id: int):
 if __name__ == '__main__':
     # testing
     tw = Twitter()
-
-    res = tw.scrape_profile("retardtrader69")
-
+    res = tw.scrape_profile("elonmusk")
     print(res)
+    tw.close()
