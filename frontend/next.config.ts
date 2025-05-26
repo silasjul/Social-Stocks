@@ -1,16 +1,21 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-    /* config options here */
-};
-
-module.exports = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
     images: {
         remotePatterns: [
-            new URL("https://pbs.twimg.com/**"),
-            new URL("https://static2.finnhub.io/**"),
+            {
+                protocol: "https",
+                hostname: "pbs.twimg.com",
+                port: "",
+                pathname: "/**",
+            },
+            {
+                protocol: "https",
+                hostname: "static2.finnhub.io",
+                port: "",
+                pathname: "/**",
+            },
         ],
     },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

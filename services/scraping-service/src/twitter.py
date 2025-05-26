@@ -13,6 +13,15 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from pydantic import BaseModel
 
+base_url = os.getenv("DATA_URL")
+isDocker = True
+if base_url == None: 
+    base_url = "http://localhost:8080"
+    isDocker = False
+    print("Not a docker container")
+else: 
+    print("Running from docker container")
+
 class Profile(BaseModel):
     id: Optional[int] = None
     profileName: str
@@ -42,12 +51,17 @@ class Twitter():
         self.options.add_experimental_option("useAutomationExtension", False)
         self.options.add_argument("--headless=new")
         self.options.add_argument("--window-size=1920,1080") # Resolution is facked in headless mode and it cant find elements
-        self.options.add_argument("--no-sandbox") # Needed for docker. MAKES YOUR PC VULNERABLE as attackers are no longer limited by the sandbox configuration and can access your pc
-        self.options.add_argument("--disable-dev-shm-usage") # dont use /dev/shm for temporary files
 
-
-        service = Service(executable_path="/usr/local/bin/chromedriver")
-        self.driver = webdriver.Chrome(options=self.options)
+        if (isDocker): # Running from docker
+            self.options.add_argument("--no-sandbox") # Needed for docker. MAKES YOUR PC VULNERABLE as attackers are no longer limited by the sandbox configuration and can access your pc
+            self.options.add_argument("--disable-dev-shm-usage") # dont use /dev/shm for temporary files
+            service = Service(executable_path="/usr/local/bin/chromedriver")
+            self.driver = webdriver.Chrome(options=self.options, service=service)
+        else:
+            self.options.add_argument(r"--user-data-dir=C:\Webdriver\temp\profile") # I created a temporary profile. So i can use my twitter account to access more profiles
+            self.options.add_argument(r"--profile-directory=Default")
+            self.driver = webdriver.Chrome(options=self.options)
+        
         self.wait = WebDriverWait(self.driver, 20)
 
     def get_tweets(self) -> List[WebElement]:
@@ -122,12 +136,17 @@ class Twitter():
 
         # Image
         # 1. click image element
-        container = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//div[contains(@data-testid, "UserAvatar-Container")]')))
-        container.click()
+        try:
+            container = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//div[@aria-label="Home timeline"]//div[contains(@data-testid, "UserAvatar-Container")]')))
+            container.click()
+        except NoSuchElementException:
+            self.load_site(f"https://x.com/{username}/photo")
         time.sleep(1)
         # 2. grab img url
         container = self.driver.find_element(By.XPATH, "//div[@aria-label='Image']")
         img = container.find_element(By.XPATH, ".//img")
+
+        print("IMG URL: " + img.get_attribute("src"))
 
         return Profile(
             profileName=profile_name.text, 
@@ -148,7 +167,6 @@ class Twitter():
     def close(self):
         self.driver.quit()
 
-base_url = os.getenv("DATA_URL", "http://localhost:8080")
 async def scrape_to_infinity():
     async with httpx.AsyncClient() as client:
         while True:
@@ -165,7 +183,7 @@ async def scrape_to_infinity():
                 for person_data in res.json():
                     person = Profile(**person_data)
                     await scrape(client, person.username, person.id)
-            await asyncio.sleep(120)
+            await asyncio.sleep(60)
 
 async def scrape_user_tweets(username: str):
     async with httpx.AsyncClient() as client:
@@ -197,4 +215,8 @@ async def scrape(client: httpx.AsyncClient, username: str, id: int):
 
 if __name__ == '__main__':
     # testing
-    asyncio.run(scrape_user_tweets("elonmusk"))
+    tw = Twitter()
+
+    res = tw.scrape_profile("retardtrader69")
+
+    print(res)

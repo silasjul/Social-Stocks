@@ -7,8 +7,6 @@ requires-python = ">=3.11"
 dependencies = [
     "fastapi[standard]>=0.115.12",
     "lxml>=5.4.0",
-    "psycopg2>=2.9.10",
     "requests>=2.32.3",
-    "selenium>=4.32.0",
-    "sqlalchemy>=2.0.41",
+    "selenium>=4.33.0",
 ]

@@ -16,7 +16,7 @@ func CreateConnection() (*sql.DB, error) {
 	connStr := os.Getenv("DATABASE_URL")
 	if connStr == "" {
 		log.Println("DATABASE_URL environment variable is not set")
-		connStr = "postgres://postgres:admin@db:5432/tradesocial?sslmode=disable"
+		connStr = "postgres://postgres:admin@localhost:5432/tradesocial?sslmode=disable"
 	}
 
 	// Create connection
