@@ -26,6 +26,7 @@ def scrape_user(username: str, background_tasks: BackgroundTasks) -> Profile:
     tw = Twitter()
     try:
         profile_data = tw.scrape_profile(username)
+        background_tasks.add_task(scrape_user_tweets, username)
     except NoSuchElementException:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, # Profile not found
@@ -33,5 +34,4 @@ def scrape_user(username: str, background_tasks: BackgroundTasks) -> Profile:
         )
     finally:
         tw.close()
-    background_tasks.add_task(scrape_user_tweets, username)
     return profile_data

@@ -1,19 +1,11 @@
 "use client";
 
-import {
-    BadgeCheck,
-    Bell,
-    ChevronsUpDown,
-    CreditCard,
-    LogOut,
-    Sparkles,
-} from "lucide-react";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
@@ -36,6 +28,10 @@ export interface User {
 
 export function NavUser({ user }: User) {
     const { isMobile } = useSidebar();
+    const avatarFallback = () => {
+        const names = user.name.split(" ");
+        return names[0].slice(0, 1) + names[1].slice(0, 1);
+    };
 
     return (
         <SidebarMenu>
@@ -52,7 +48,7 @@ export function NavUser({ user }: User) {
                                     alt={user.name}
                                 />
                                 <AvatarFallback className="rounded-lg">
-                                    AV
+                                    {avatarFallback()}
                                 </AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">
@@ -80,7 +76,7 @@ export function NavUser({ user }: User) {
                                         alt={user.name}
                                     />
                                     <AvatarFallback className="rounded-lg">
-                                        AV
+                                        {avatarFallback()}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">

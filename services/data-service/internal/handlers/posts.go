@@ -67,12 +67,16 @@ func AddPostsHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		// Add posts
+		var errors []error
 		for i := range req {
 			err = database.AddPost(db, req[i].PersonID, req[i].Text, req[i].Time, req[i].Comments, req[i].Retweets, req[i].Likes, req[i].Views)
-				if err != nil {
-					http.Error(w, "Error adding post", http.StatusInternalServerError)
-					return
+			if err != nil {
+				errors = append(errors, err)
 			}
+		}
+		if len(errors) > 0 {
+			http.Error(w, "Error adding 1 or more posts", http.StatusInternalServerError)
+			return
 		}
 
 		// Status 201

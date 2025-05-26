@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -11,8 +12,14 @@ import (
 )
 
 func CreateConnection() (*sql.DB, error) {
+	// Get database url
+	connStr := os.Getenv("DATABASE_URL")
+	if connStr == "" {
+		log.Println("DATABASE_URL environment variable is not set")
+		connStr = "postgres://postgres:admin@db:5432/tradesocial?sslmode=disable"
+	}
+
 	// Create connection
-	connStr := "postgres://postgres:admin@localhost:5432/tradesocial?sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return nil, err
@@ -99,7 +106,6 @@ func AddPost(db *sql.DB, personID int, text string, time time.Time, comments int
 	`
 	_, err := db.Exec(addPostSQL, personID, text, time, comments, retweets, likes, views)
 	if err != nil {
-		log.Printf("error inserting post '%s': %v", text, err)
 		return fmt.Errorf("error inserting post '%s': %v", text, err)
 	}
 	if len(text) > 30 {

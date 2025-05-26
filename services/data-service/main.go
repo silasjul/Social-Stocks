@@ -13,7 +13,7 @@ import (
 
 func main() {
 	// Database connection
-	db, err := database.CreateConnection() 
+	db, err := database.CreateConnection()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -39,7 +39,7 @@ func main() {
 
 	// CORS policy
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:3000", "http://127.0.0.1:3000",},
+		AllowedOrigins: []string{"http://localhost:3000", "http://localhost:8000",},
 		AllowedMethods: []string{"GET", "POST"}, 
 		AllowedHeaders: []string{"Content-Type"},
 	})

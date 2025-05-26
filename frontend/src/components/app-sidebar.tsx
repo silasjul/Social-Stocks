@@ -25,7 +25,7 @@ const teams = [
     },
 ];
 
-export type Pages = "Dashboard" | "Charts" | "People" | "Settings";
+export type Pages = "Dashboard" | "Charts" | "People";
 
 const navItems = [
     {
@@ -42,11 +42,6 @@ const navItems = [
         title: "People",
         url: "/follow-people",
         icon: Users,
-    },
-    {
-        title: "Settings",
-        url: "/settings",
-        icon: Settings2,
     },
 ];
 

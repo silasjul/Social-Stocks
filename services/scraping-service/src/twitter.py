@@ -1,4 +1,5 @@
 import asyncio
+import os
 import time
 from typing import List, Optional
 import httpx
@@ -6,6 +7,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from pydantic import BaseModel
 
@@ -34,11 +38,17 @@ class Tweet(BaseModel):
 class Twitter():
     def __init__(self):
         self.options = Options()
-        self.options.add_experimental_option("excludeSwitches", ["enable-automation"]) # Avoid bot detection
-        self.options.add_experimental_option("useAutomationExtension", False) # Avoid bot detection
-        # self.options.add_argument("--headless")
+        self.options.add_experimental_option("excludeSwitches", ["enable-automation"]) # Real user imitation
+        self.options.add_experimental_option("useAutomationExtension", False)
+        self.options.add_argument("--headless=new")
+        self.options.add_argument("--window-size=1920,1080") # Resolution is facked in headless mode and it cant find elements
+        self.options.add_argument("--no-sandbox") # Needed for docker. MAKES YOUR PC VULNERABLE as attackers are no longer limited by the sandbox configuration and can access your pc
+        self.options.add_argument("--disable-dev-shm-usage") # dont use /dev/shm for temporary files
 
+
+        service = Service(executable_path="/usr/local/bin/chromedriver")
         self.driver = webdriver.Chrome(options=self.options)
+        self.wait = WebDriverWait(self.driver, 20)
 
     def get_tweets(self) -> List[WebElement]:
         tweet_containers = self.driver.find_elements(By.XPATH, "//article[@data-testid='tweet']")
@@ -112,7 +122,7 @@ class Twitter():
 
         # Image
         # 1. click image element
-        container = self.driver.find_element(By.XPATH, '//div[contains(@data-testid, "UserAvatar-Container")]')
+        container = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//div[contains(@data-testid, "UserAvatar-Container")]')))
         container.click()
         time.sleep(1)
         # 2. grab img url
@@ -138,11 +148,12 @@ class Twitter():
     def close(self):
         self.driver.quit()
 
-base_url = "http://localhost:8080"
+base_url = os.getenv("DATA_URL", "http://localhost:8080")
 async def scrape_to_infinity():
     async with httpx.AsyncClient() as client:
         while True:
             # Get all people from data-service
+            res = None
             try:
                 res = await client.get(f"{base_url}/people")
                 res.raise_for_status()
@@ -150,25 +161,27 @@ async def scrape_to_infinity():
                 print(f"Error getting people: {e}")
 
             # Scrape all tweets
-            for person_data in res.json():
-                person = Profile(**person_data)
-                await scrape(client, person.username, person.id)
-            
-            await asyncio.sleep(60)
+            if res:
+                for person_data in res.json():
+                    person = Profile(**person_data)
+                    await scrape(client, person.username, person.id)
+            await asyncio.sleep(120)
 
 async def scrape_user_tweets(username: str):
     async with httpx.AsyncClient() as client:
         # Get all people from data-service
+        res = None
         try:
             res = await client.get(f"{base_url}/people")
             res.raise_for_status()
         except Exception as e:
-            print(f"Error getting people: {e}")
-            return
+            print(f"Error getting people: {e} | {base_url}")
 
-        await scrape(client, username, len(res.json())+1) # <- dont be a lazy fuck could cause race condition if multiple users add a person at the same time
+        if res:
+            await scrape(client, username, len(res.json())+1) # <- dont be a lazy fuck could cause race condition if multiple users add a person at the same time
             
 async def scrape(client: httpx.AsyncClient, username: str, id: int):
+    print("Scraping tweets from: " + username)
     # Scrape all tweets
     tw = Twitter()
     tweet_data = tw.scrape_profile_tweets(username, id)

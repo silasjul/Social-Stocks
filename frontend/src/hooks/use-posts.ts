@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 
 export function usePosts() {
-    const postsURL = "http://localhost:8080/posts";
+    const postsURL = process.env.DATA_URL || "http://localhost:8080";
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
     const [posts, setPosts] = useState<Post[]>([]);
@@ -12,7 +12,7 @@ export function usePosts() {
         setIsLoading(true);
         setError(undefined);
         try {
-            const res = await axios.get(postsURL);
+            const res = await axios.get(`${postsURL}/posts`);
             const data = res.data as Post[];
             setPosts(data);
         } catch (err: any) {

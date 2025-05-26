@@ -37,6 +37,7 @@ export function FollowDialog({
     people: Person[];
     addPerson: (person: Person) => void;
 }) {
+    const inputRef = useRef<HTMLInputElement>(null);
     const [username, setUsername] = useState("");
     const [searchValidation, setSearchValidation] = useState("");
     const { isLoading, error, scrapeProfile } = useScraper();
@@ -64,8 +65,10 @@ export function FollowDialog({
 
         // Search for a profile
         const person_data = await scrapeProfile(username.slice(1)); // removes @
-        if (person_data) addPerson(person_data);
-        setUsername("");
+        if (person_data) {
+            addPerson(person_data);
+            setUsername("");
+        }
     };
 
     // Searching animation
@@ -127,6 +130,7 @@ export function FollowDialog({
                             </a>
                         </Label>
                         <Input
+                            ref={inputRef}
                             id="username"
                             placeholder="@example"
                             onChange={(e) => setUsername(e.target.value)}

@@ -1,0 +1,47 @@
+services:
+    data-service:
+        build:
+            context: "./services/data-service"
+            dockerfile: dockerfile
+        ports:
+            - "8080:8080"
+        environment:
+            DATABASE_URL: postgres://postgres:admin@db:5432/tradesocial?sslmode=disable
+        depends_on:
+            - db
+
+    db:
+        image: postgres:17.5
+        environment:
+            POSTGRES_DB: tradesocial
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: admin
+        volumes:
+            - db-data:/var/lib/postgresql/data
+
+    scraping-service:
+        build:
+            context: "./services/scraping-service"
+            dockerfile: dockerfile
+        ports:
+            - "8000:8000"
+        environment:
+            DATA_URL: http://data-service:8080
+        depends_on:
+            - data-service
+
+    frontend:
+        build:
+            context: "./frontend"
+            dockerfile: dockerfile
+        ports:
+            - "3000:3000"
+        environment:
+            DATA_URL: http://data-service:8080
+            SCRAPING_API_URL: http://scraping-service:8000
+        depends_on:
+            - data-service
+            - scraping-service
+
+volumes:
+    db-data:
