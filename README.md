@@ -41,6 +41,8 @@ To run the project, you will need to have [Docker](https://www.docker.com/) and 
 
     ```bash
     git clone https://github.com/silasjul/TradeSocial.git
+    ```
+     ```bash
     cd TradeSocial
     ```
 
