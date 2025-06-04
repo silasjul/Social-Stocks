@@ -83,7 +83,10 @@ class Twitter():
         # Counts - comments, retweets, likes, views
         comments_count = self.get_count(tweet, ".//button[@data-testid='reply']")
         retweets_count = self.get_count(tweet, ".//button[@data-testid='retweet']")
-        likes_count = self.get_count(tweet, ".//button[@data-testid='like']")
+        try:
+            likes_count = self.get_count(tweet, ".//button[@data-testid='like']")
+        except NoSuchElementException:
+            likes_count = 0
         try:
             views_count = self.get_count(tweet, ".//a[contains(@aria-label, 'views.')]")
         except NoSuchElementException:
@@ -216,7 +219,8 @@ async def scrape(client: httpx.AsyncClient, username: str, id: int):
 
 if __name__ == '__main__':
     # testing
-    tw = Twitter()
+    """ tw = Twitter()
     res = tw.scrape_profile("elonmusk")
     print(res)
-    tw.close()
+    tw.close() """
+    asyncio.run(scrape_user_tweets("retardtrader69"))
