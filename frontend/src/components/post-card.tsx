@@ -1,6 +1,7 @@
 import { Person, Post } from "@/lib/interfaces";
 import { Eye, Heart, MessageCircle, Repeat } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 
 function formatNumber(num: number) {
     if (num >= 1_000_000)
@@ -13,21 +14,37 @@ export default function PostCard({
     post,
     person,
     onHover,
+    handleSelect,
+    isSymbolSelected,
 }: {
     post: Post;
     person?: Person;
     onHover?: (arg: Post | undefined) => void;
+    handleSelect?: (post: Post) => void;
+    isSymbolSelected?: boolean;
 }) {
     if (!person) return;
 
     const date = new Date(post.time);
     const dateStr = date.toString().slice(4, 21); // month day year hour:minute
 
+    const [isSelected, setIsSelected] = useState(false);
+
+    const handleClick = () => {
+        handleSelect && handleSelect(post);
+        setIsSelected(!isSelected);
+    };
+
     return (
         <div
-            className="bg-background border rounded-lg p-4"
+            className={`bg-background border rounded-lg p-4 ${
+                !isSymbolSelected &&
+                isSelected &&
+                "border-dashed border-green-500"
+            }`}
             onMouseEnter={() => onHover && onHover(post)}
             onMouseLeave={() => onHover && onHover(undefined)}
+            onClick={handleClick}
         >
             <div className="flex gap-2">
                 <div>

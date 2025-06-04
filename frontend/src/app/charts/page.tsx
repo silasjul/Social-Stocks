@@ -21,6 +21,7 @@ export default function Charts() {
     const [symbol, setSymbol] = useState("");
     const [person, setPerson] = useState("");
     const [selectedPerson, setSelectedPerson] = useState<Person>();
+    const [selectedTweets, setSelectedTweets] = useState<Post[]>([]);
     const [hoveredPost, setHoveredPost] = useState<Post>();
     const [timeFrame, setTimeFrame] = useState(timeFrames[0]);
     const { people } = usePeople();
@@ -30,6 +31,16 @@ export default function Charts() {
         setSelectedPerson(people.find((p) => p.username.slice(1) == person));
         fetchPosts();
     }, [person]);
+
+    const selectTweet = (post: Post) => {
+        const filteredPosts = selectedTweets.filter((p) => p.time != post.time);
+
+        if (filteredPosts.length != selectedTweets.length) {
+            setSelectedTweets(filteredPosts);
+        } else {
+            setSelectedTweets([...selectedTweets, post]);
+        }
+    };
 
     return (
         <AppSidebar activepage="Charts" includeHeader={false}>
@@ -98,7 +109,7 @@ export default function Charts() {
                 <section className="absolute flex flex-col gap-4 z-10 mr-16 pb-4">
                     {selectedPerson &&
                         (symbol
-                            ? postsByPerson(selectedPerson, posts).slice(0, 1)
+                            ? selectedTweets
                             : postsByPerson(selectedPerson, posts)
                         ).map((post, idx) => (
                             <PostCard
@@ -106,6 +117,8 @@ export default function Charts() {
                                 post={post}
                                 person={selectedPerson}
                                 onHover={setHoveredPost}
+                                handleSelect={selectTweet}
+                                isSymbolSelected={symbol ? true : false}
                             />
                         ))}
                 </section>
