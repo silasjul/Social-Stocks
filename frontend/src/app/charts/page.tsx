@@ -12,6 +12,9 @@ import { Person, Post } from "@/lib/interfaces";
 import TimeFrameButton from "@/components/timeframe-btn";
 import { usePeople } from "@/hooks/use-people";
 import { usePosts } from "@/hooks/use-posts";
+import { LucideMinus, LucidePlus} from "lucide-react";
+import PostAmountBtn from "@/components/ui/postAmountBtn";
+
 
 function postsByPerson(person: Person, posts: Post[]) {
     return posts.filter((post) => person.id == post.personId);
@@ -25,11 +28,21 @@ export default function Charts() {
     const [timeFrame, setTimeFrame] = useState(timeFrames[0]);
     const { people } = usePeople();
     const { posts, fetchPosts } = usePosts();
+    const [amountOfPosts, setAmountOfPosts] = useState(1);
 
     useEffect(() => {
         setSelectedPerson(people.find((p) => p.username.slice(1) == person));
         fetchPosts();
     }, [person]);
+
+    const incrementBtn = () => {
+        setAmountOfPosts((p) => p + 1);
+    };
+
+    const decrementBtn = () => {
+        setAmountOfPosts((p) => Math.max(1,p - 1));
+    };
+
 
     return (
         <AppSidebar activepage="Charts" includeHeader={false}>
@@ -67,6 +80,19 @@ export default function Charts() {
                         />
                     ))}
                 </div>
+
+                                <div className="flex items-center gap-2">
+                    <span className="mr-2">Posts To Show</span>
+                    <PostAmountBtn onClick={decrementBtn}>
+                        <LucideMinus size={20} />
+                    </PostAmountBtn>
+                    <span className="w-6 text-center">{ amountOfPosts }</span>
+                     <PostAmountBtn onClick={incrementBtn}>
+                        <LucidePlus size={20} />
+                    </PostAmountBtn>
+                </div>
+
+
                 <div className="ml-auto m-4">
                     <ThemeSwitch />
                 </div>
@@ -98,7 +124,7 @@ export default function Charts() {
                 <section className="absolute flex flex-col gap-4 z-10 mr-16 pb-4">
                     {selectedPerson &&
                         (symbol
-                            ? postsByPerson(selectedPerson, posts).slice(0, 1)
+                            ? postsByPerson(selectedPerson, posts).slice(0, amountOfPosts)
                             : postsByPerson(selectedPerson, posts)
                         ).map((post, idx) => (
                             <PostCard
