@@ -66,10 +66,10 @@ To run the project, you will need to have [Docker](https://www.docker.com/) inst
 
 3.  In the window log in to your X account and close the window.
 
-4.  Run Docker Compose build:
+4.  From frontend folder: Run Docker Compose build:
 
     ```bash
-    docker-compose --build 
+    docker-compose build 
     ```
     
 5.  Run Docker Compose up (db frontend & data-service, ONLY):
@@ -81,17 +81,19 @@ To run the project, you will need to have [Docker](https://www.docker.com/) inst
 6.  Open new terminal and go to:
 
     ```bash
-    cd \services\scraping-service
+    cd .\services\scraping-service\
     ```
 
 
 8.  Start Scraper manually:
 
     ```bash
-    fastapi run \main.py
+    fastapi run main.py
     ```
 
-9.  You can now search for persons on X in People: add Person +
+9.  Open http://localhost:3000 
+
+    You can now search for persons on X in People: add Person +
     After adding external window will open twice, wait for that 
     (a winodow will open and close every minute going forward...)
     Then you can go to Charts and Find your person and also select a stock to compare with.
