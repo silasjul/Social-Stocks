@@ -66,5 +66,37 @@ To run the project, you will need to have [Docker](https://www.docker.com/) inst
 
 3.  In the window log in to your X account and close the window.
 
-4.  Proceed with A 1 and A 2 above.
+4.  Run Docker Compose build:
+
+    ```bash
+    docker-compose --build 
+    ```
     
+5.  Run Docker Compose up (db frontend & data-service, ONLY):
+
+    ```bash
+    docker-compose up db frontend data-service
+    ```
+
+6.  Open new terminal and go to:
+
+    ```bash
+    cd \services\scraping-service
+    ```
+
+
+8.  Start Scraper manually:
+
+    ```bash
+    fastapi run \main.py
+    ```
+
+9.  You can now search for persons on X in People: add Person +
+    After adding external window will open twice, wait for that 
+    (a winodow will open and close every minute going forward...)
+    Then you can go to Charts and Find your person and also select a stock to compare with.
+    If your selected person has 'tweeted' resently, it wil show, 
+    and you can add an extra amount of tweets using the + button.
+    They will be in chronological order.
+    By hovering over the tweet, it shows the point in time on the graph.
+
