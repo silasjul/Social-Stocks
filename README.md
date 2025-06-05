@@ -37,16 +37,10 @@ This project utilizes a combination of modern web technologies:
 
 To run the project, you will need to have [Docker](https://www.docker.com/) installed.
 
-1.  Clone the repository:
+## A. You can run the project without login on X, but only super profiles can be seen, and only with selected posts!
 
-    ```bash
-    git clone https://github.com/silasjul/TradeSocial.git
-    ```
-     ```bash
-    cd TradeSocial
-    ```
 
-2.  Run Docker Compose:
+1.  Run Docker Compose:
 
     ```bash
     docker-compose up --build
@@ -54,6 +48,23 @@ To run the project, you will need to have [Docker](https://www.docker.com/) inst
 
     This command will build the Docker images and start the containers.
 
-3.  Access the application:
+2.  Access the application:
 
     Once the containers are running, you can access the application in your web browser at `http://localhost:3000`.
+
+## B. If you have an accoiunt on X and wnat to have the full experience (Only Windows users)
+
+1.  Comment out these lines 52 & 53 in \TradeSocial-posts-number\services\scraping-service\src\twitter.py
+
+        self.options.add_argument("--headless=new") # <----- Comment out these line for login
+        self.options.add_argument("--window-size=1920,1080") # <----- Comment out these line for login
+2.  Run the Batch file start_chrome.bat
+
+        It will create a folder for an extra profile (C:\Webdriver\temp\profile\Default) and open chrome.
+        Chrome has to be in the default place on your computer for this i.e. C:\Program Files\Google\Chrome\Application\chrome.exe
+        Otherwise change the bat file to match your custom folder for your chrome app
+
+3.  In the window log in to your X account and close the window.
+
+4.  Proceed with A 1 and A 2 above.
+    
