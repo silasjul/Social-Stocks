@@ -49,10 +49,10 @@ class Twitter():
         self.options = Options()
         self.options.add_experimental_option("excludeSwitches", ["enable-automation"]) # Real user imitation
         self.options.add_experimental_option("useAutomationExtension", False)
-        #self.options.add_argument("--headless=new")
-        #self.options.add_argument("--window-size=1920,1080") # Resolution is facked in headless mode and it cant find elements
 
         if (isDocker): # Running from docker
+            self.options.add_argument("--headless=new")
+            self.options.add_argument("--window-size=1920,1080") # Resolution is facked in headless mode and it cant find elements
             self.options.add_argument("--no-sandbox") # Needed for docker. MAKES YOUR PC VULNERABLE as attackers are no longer limited by the sandbox configuration and can access your pc
             self.options.add_argument("--disable-dev-shm-usage") # dont use /dev/shm for temporary files
             service = Service(executable_path="/usr/local/bin/chromedriver")

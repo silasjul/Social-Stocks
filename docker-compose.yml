@@ -9,8 +9,6 @@ services:
             DATABASE_URL: postgres://postgres:admin@db:5432/tradesocial?sslmode=disable
         depends_on:
             - db
-        profiles:
-            - test
 
     db:
         image: postgres:17.5
